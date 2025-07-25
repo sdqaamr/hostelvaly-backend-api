@@ -17,7 +17,7 @@ const corsOptions = {
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
-dotenv.config();
+dotenv.config({ path: '.example.env' });
 app.use(cors(corsOptions));
 
 dbConnect();

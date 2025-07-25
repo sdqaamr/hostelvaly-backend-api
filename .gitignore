@@ -44,3 +44,6 @@ debug.log
 
 # Docker files
 docker-compose.override.yml
+
+# Ignore lockfile
+package-lock.json
