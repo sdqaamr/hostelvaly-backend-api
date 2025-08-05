@@ -7,11 +7,7 @@ const hostelsSchema = mongoose.Schema({
     address: String,
     contact: String,
     amenities: Array,
-    roomTypes: {
-        type: String,
-        price: Number,
-        available: Number,
-    },
+    roomTypes: Object,
     rating: Number,
     reviewsCount: Number,
     isAvailable: Boolean,
