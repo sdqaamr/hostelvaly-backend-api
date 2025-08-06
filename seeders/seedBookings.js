@@ -1,0 +1,136 @@
+const seedBookings = async () => {
+  const module = await import("../models/bookings.js");
+  const Bookings = module.default;
+  const count = await Bookings.countDocuments();
+  if (count > 0) {
+    console.log("Bookings already seeded.");
+    return;
+  }
+  // Example Bookings data
+  const bookingsData = [
+    {
+      _id: "687a908aadca98b6494c1899",
+      roomType: "Single",
+      price: 12000,
+      status: "confirmed",
+      paymentMethod: "Cash",
+      fromDate: "2025-08-01T00:00:00.000Z",
+      toDate: "2025-12-31T00:00:00.000Z",
+      bookingDate: "2025-07-14T11:20:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99be",
+      user: "687a8d8f69d717b002fa06a5",
+    },
+    {
+      _id: "687a908aadca98b6494c189a",
+      roomType: "Single",
+      price: 15000,
+      status: "pending",
+      paymentMethod: "Bank Transfer",
+      fromDate: "2025-09-01T00:00:00.000Z",
+      toDate: "2026-01-31T00:00:00.000Z",
+      bookingDate: "2025-07-10T08:45:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c0",
+      user: "687a8d8f69d717b002fa06a1",
+    },
+    {
+      _id: "687a908aadca98b6494c189b",
+      roomType: "Double",
+      price: 10000,
+      status: "confirmed",
+      paymentMethod: "Online",
+      fromDate: "2025-07-20T00:00:00.000Z",
+      toDate: "2025-11-20T00:00:00.000Z",
+      bookingDate: "2025-07-12T14:00:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c1",
+      user: "687a8d8f69d717b002fa06a7",
+    },
+    {
+      _id: "687a908aadca98b6494c189c",
+      roomType: "Single",
+      price: 9000,
+      status: "cancelled",
+      paymentMethod: "Cash",
+      fromDate: "2025-08-15T00:00:00.000Z",
+      toDate: "2025-12-15T00:00:00.000Z",
+      bookingDate: "2025-07-05T10:10:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c3",
+      user: "687a8d8f69d717b002fa06a8",
+    },
+    {
+      _id: "687a908aadca98b6494c189d",
+      roomType: "Double",
+      price: 8500,
+      status: "confirmed",
+      paymentMethod: "Online",
+      fromDate: "2025-09-01T00:00:00.000Z",
+      toDate: "2026-01-31T00:00:00.000Z",
+      bookingDate: "2025-07-01T09:25:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c3",
+      user: "687a8d8f69d717b002fa06a2",
+    },
+    {
+      _id: "687a908aadca98b6494c189e",
+      roomType: "Shared",
+      price: 7000,
+      status: "confirmed",
+      paymentMethod: "Bank Transfer",
+      fromDate: "2025-07-25T00:00:00.000Z",
+      toDate: "2025-11-25T00:00:00.000Z",
+      bookingDate: "2025-07-11T16:30:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c2",
+      user: "687a8d8f69d717b002fa06a4",
+    },
+    {
+      _id: "687a908aadca98b6494c189f",
+      roomType: "Shared",
+      price: 7000,
+      status: "pending",
+      paymentMethod: "Cash",
+      fromDate: "2025-08-05T00:00:00.000Z",
+      toDate: "2025-12-05T00:00:00.000Z",
+      bookingDate: "2025-07-13T13:45:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c2",
+      user: "687a8d8f69d717b002fa06a9",
+    },
+    {
+      _id: "687a908aadca98b6494c18a0",
+      roomType: "Shared",
+      price: 8000,
+      status: "confirmed",
+      paymentMethod: "Online",
+      fromDate: "2025-08-10T00:00:00.000Z",
+      toDate: "2026-02-10T00:00:00.000Z",
+      bookingDate: "2025-07-07T12:00:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99bf",
+      user: "687a8d8f69d717b002fa06a0",
+    },
+    {
+      _id: "687a908aadca98b6494c18a1",
+      roomType: "Shared",
+      price: 9000,
+      status: "confirmed",
+      paymentMethod: "Cash",
+      fromDate: "2025-07-20T00:00:00.000Z",
+      toDate: "2026-01-20T00:00:00.000Z",
+      bookingDate: "2025-07-09T17:15:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c6",
+      user: "687a8d8f69d717b002fa06a3",
+    },
+    {
+      _id: "687a908aadca98b6494c18a2",
+      roomType: "Double",
+      price: 11000,
+      status: "confirmed",
+      paymentMethod: "Bank Transfer",
+      fromDate: "2025-08-01T00:00:00.000Z",
+      toDate: "2026-02-01T00:00:00.000Z",
+      bookingDate: "2025-07-10T08:00:00.000Z",
+      hostel: "687a8a22cc7148c1e78a99c4",
+      user: "687a8d8f69d717b002fa06a6",
+    },
+  ];
+  await Bookings.insertMany(bookingsData);
+  console.log("Bookings seeded successfully.");
+};
+
+export default seedBookings;

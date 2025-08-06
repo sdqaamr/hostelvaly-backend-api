@@ -3,24 +3,18 @@ import mongoose from "mongoose";
 const usersSchema = mongoose.Schema({
   fullName: String,
   email: String,
+  role: {
+    type: String,
+    enum: ["admin", "owner", "student"],
+    default: "student",
+  },
+  otp: Number,
+  otpExpiresAt: Date,
   password: String,
   profilePicture: {
     type: String,
     default:
       "https://res.cloudinary.com/dz4qj1x5f/image/upload/v1709301234/hostelvaly/default-profile-picture.png",
-  },
-  otp: {
-    type: String,
-    default: null,
-  },
-  otpExpiresAt: {
-    type: Date,
-    default: null,
-  },
-  role: {
-    type: String,
-    enum: ["owner", "user", "admin"],
-    default: "user",
   },
   phone: String,
   city: String,

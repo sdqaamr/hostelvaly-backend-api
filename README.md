@@ -30,17 +30,131 @@ This is the backend API for **HostelValy**, a smart and seamless hostel-finding 
 
 The backend uses a MongoDB database with the following collections:
 
-| Collection       | Purpose                                              |
-|------------------|------------------------------------------------------|
-| `users`          | Stores user credentials, OTPs, and profile data     |
-| `hostels`        | Contains hostel property data and room information  |
-| `bookings`       | Tracks user bookings and payment details            |
-| `visitRequests`  | Stores visit request data                           |
-| `reviews`        | User-generated reviews and ratings for hostels      |
+| Collection      | Purpose                                            |
+| --------------- | -------------------------------------------------- |
+| `users`         | Stores user credentials, OTPs, and profile data    |
+| `hostels`       | Contains hostel property data and room information |
+| `bookings`      | Tracks user bookings and payment details           |
+| `visitRequests` | Stores visit request data                          |
+| `reviews`       | User-generated reviews and ratings for hostels     |
 
 ---
 
 ## 📁 Project Structure
 
-Will add later!
+```
+📦 hostelvaly-backend-api
+🗄 config/
+│   └── database.js            # MongoDB connection setup
+├── controllers/              # Business logic for each entity
+│   ├── bookings.js
+│   ├── hostels.js
+│   ├── reviews.js
+│   ├── users.js
+│   └── visitRequests.js
+├── models/                   # Mongoose schemas
+│   ├── Booking.js
+│   ├── Hostel.js
+│   ├── Review.js
+│   ├── User.js
+│   └── VisitRequest.js
+├── middlewares/             # Custom middlewares like ID validation
+│   └── ValidateId.js
+├── routes/                   # API routes
+│   ├── bookings.js
+│   ├── hostels.js
+│   ├── reviews.js
+│   ├── users.js
+│   └── visitRequests.js
+├── seeders/                  # Seeder files to populate database
+│   ├── seedBookings.js
+│   ├── seedHostels.js
+│   ├── seedReviews.js
+│   ├── seedUsers.js
+│   └── seedVisitRequests.js
+├── .example.env              # Environment variable example file
+├── index.js                  # Entry point and server setup
+├── run-seeder.js             # Seeder runner
+├── package.json              # Project metadata and scripts
+└── README.md                 # Project documentation
+```
 
+---
+
+## ⚙️ Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/sdqaamr/hostelvaly-backend-api.git
+cd hostelvaly-backend-api
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a `.env` file using the provided `.example.env`:
+
+```env
+PORT=3000
+HOST="127.0.0.1"
+MONGODB_URI="mongodb://localhost:27017/hostel_valy"
+APP_URL="http://localhost:8081"
+```
+
+### 4. Run the Development Server
+
+```bash
+npm run dev
+```
+
+The server will start at: `http://127.0.0.1:3000`
+
+To run in production mode:
+
+```bash
+npm start
+```
+
+---
+
+## 🌱 Run Seeders
+
+Populate the database with initial data:
+
+```bash
+node run-seeder.js
+```
+
+Make sure MongoDB is running locally before executing the seeder.
+
+---
+
+## 📬 API Endpoints Overview
+
+| Entity         | Endpoint             |
+| -------------- | -------------------- |
+| Hostels        | `/api/hostels`       |
+| Users          | `/api/users`         |
+| Bookings       | `/api/bookings`      |
+| Visit Requests | `/api/visitRequests` |
+| Reviews        | `/api/reviews`       |
+
+Each route supports standard CRUD operations (GET, POST, PUT, DELETE).
+
+---
+
+## 📄 License
+
+This project is licensed under the [ISC License](LICENSE).
+
+---
+
+## 👤 Author
+
+> Developed with 💻 by Saddiqa and the HostelValy Backend Team.

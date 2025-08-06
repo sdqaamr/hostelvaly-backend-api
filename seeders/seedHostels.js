@@ -1,41 +1,186 @@
 const seedHostels = async () => {
-    const module = await import("../models/hostels.js");
-    const Hostels = module.default;
-    const count = await Hostels.countDocuments();
-    if (count > 0) {
-        console.log("Hostels already seeded.");
-        return;
-    }
-    const hostelData = [
-        {
-            _id:"689203c34664390116bf70ef",
-            name: "Sunrise Hostel",
-            city: "Lahore",
-            area: "DHA",
-            address: "123 DHA Phase 5, Lahore",
-            contact: "0300-1234567",
-            amenities: ["WiFi", "Laundry", "Mess", "Parking"],
-            roomTypes: { type: "Single", price: 12000, available: 10 },
-            rating: 4.5,
-            reviewsCount: 12,
-            isAvailable: true
-        },
-        {
-            _id:"689203c34664390116bf70f0",
-            name: "Moonlight Hostel",
-            city: "Karachi",
-            area: "Gulshan",
-            address: "45 Gulshan Block 2, Karachi",
-            contact: "0311-7654321",
-            amenities: ["WiFi", "AC", "Security"],
-            roomTypes: { type: "Double", price: 9000, available: 8 },
-            rating: 4.2,
-            reviewsCount: 8,
-            isAvailable: true
-        }
-    ];
-    await Hostels.insertMany(hostelData);
-    console.log("Hostels seeded successfully.");
+  const module = await import("../models/hostels.js");
+  const Hostels = module.default;
+  const count = await Hostels.countDocuments();
+  if (count > 0) {
+    console.log("Hostels already seeded.");
+    return;
+  }
+  // Example Hostels data
+  const hostelData = [
+    {
+      _id: "687a8a22cc7148c1e78a99be",
+      name: "Al-Madina Boys Hostel",
+      city: "Lahore",
+      area: "Johar Town",
+      address: "Near Emporium Mall, Johar Town, Lahore",
+      contact: "+923334445566",
+      amenities: ["WiFi", "AC", "Laundry", "Mess", "Parking"],
+      roomTypes: {
+        type: "Single",
+        price: 12000,
+        available: 3,
+      },
+      rating: 4.2,
+      reviewsCount: 45,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99bf",
+      name: "Iqra Boys Hostel",
+      city: "Lahore",
+      area: "DHA",
+      address: "Phase 6, DHA, Lahore",
+      contact: "+923335556677",
+      amenities: ["WiFi", "Security", "Mess", "CCTV"],
+      roomTypes: {
+        type: "Shared",
+        price: 8000,
+        available: 5,
+      },
+      rating: 4,
+      reviewsCount: 30,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c0",
+      name: "Shaheen Girls Hostel",
+      city: "Islamabad",
+      area: "F-8",
+      address: "Street 23, F-8, Islamabad",
+      contact: "+923331112233",
+      amenities: ["WiFi", "AC", "Laundry", "Security"],
+      roomTypes: {
+        type: "Single",
+        price: 15000,
+        available: 2,
+      },
+      rating: 4.5,
+      reviewsCount: 22,
+      isAvailable: false,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c1",
+      name: "Comfort Hostel",
+      city: "Karachi",
+      area: "PECHS",
+      address: "Block 6, PECHS, Karachi",
+      contact: "+923338884445",
+      amenities: ["WiFi", "AC", "Power Backup", "Mess"],
+      roomTypes: {
+        type: "Double",
+        price: 10000,
+        available: 4,
+      },
+      rating: 4.1,
+      reviewsCount: 35,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c2",
+      name: "Al-Fateh Girls Hostel",
+      city: "Faisalabad",
+      area: "Jaranwala Road",
+      address: "Near Central Park, Faisalabad",
+      contact: "+923339996665",
+      amenities: ["WiFi", "Security", "Laundry"],
+      roomTypes: {
+        type: "Shared",
+        price: 7000,
+        available: 6,
+      },
+      rating: 3.9,
+      reviewsCount: 18,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c3",
+      name: "Rahat Hostel",
+      city: "Peshawar",
+      area: "University Town",
+      address: "Near UET Peshawar",
+      contact: "+923337777888",
+      amenities: ["WiFi", "Mess", "Parking"],
+      roomTypes: {
+        type: "Single",
+        price: 9000,
+        available: 3,
+      },
+      rating: 4.3,
+      reviewsCount: 40,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c4",
+      name: "Nexus Hostel",
+      city: "Islamabad",
+      area: "G-9",
+      address: "Street 12, G-9, Islamabad",
+      contact: "+923332223344",
+      amenities: ["WiFi", "AC", "Security", "Mess"],
+      roomTypes: {
+        type: "Double",
+        price: 11000,
+        available: 4,
+      },
+      rating: 4.4,
+      reviewsCount: 27,
+      isAvailable: false,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c5",
+      name: "City View Boys Hostel",
+      city: "Lahore",
+      area: "Garden Town",
+      address: "Near Good Earth, Garden Town",
+      contact: "+923330001122",
+      amenities: ["WiFi", "Mess", "Laundry"],
+      roomTypes: {
+        type: "Single",
+        price: 13000,
+        available: 2,
+      },
+      rating: 4,
+      reviewsCount: 20,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c6",
+      name: "Bright Future Hostel",
+      city: "Karachi",
+      area: "Gulistan-e-Jauhar",
+      address: "Block 3, Gulistan-e-Jauhar, Karachi",
+      contact: "+923331234567",
+      amenities: ["WiFi", "AC", "Security"],
+      roomTypes: {
+        type: "Shared",
+        price: 9000,
+        available: 5,
+      },
+      rating: 3.8,
+      reviewsCount: 15,
+      isAvailable: true,
+    },
+    {
+      _id: "687a8a22cc7148c1e78a99c7",
+      name: "University Town Hostel",
+      city: "Peshawar",
+      area: "University Town",
+      address: "Near University Town, Peshawar",
+      contact: "+923338800999",
+      amenities: ["WiFi", "Mess", "Laundry", "Security"],
+      roomTypes: {
+        type: "Double",
+        price: 8500,
+        available: 4,
+      },
+      rating: 4.1,
+      reviewsCount: 32,
+      isAvailable: true,
+    },
+  ];
+  await Hostels.insertMany(hostelData);
+  console.log("Hostels seeded successfully.");
 };
 
 export default seedHostels;
