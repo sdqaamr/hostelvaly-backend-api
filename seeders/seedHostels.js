@@ -16,10 +16,25 @@ const seedHostels = async () => {
       address: "Near Emporium Mall, Johar Town, Lahore",
       contact: "+923334445566",
       amenities: ["WiFi", "AC", "Laundry", "Mess", "Parking"],
-      roomTypes: [
-        { type: "Single", price: 12000, available: 3 },
-        { type: "Double", price: 18000, available: 2 },
-        { type: "Shared", price: 8000, available: 5 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aec8",
+          type: "Single",
+          price: 12000,
+          available: 3,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aec9",
+          type: "Double",
+          price: 18000,
+          available: 2,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aeca",
+          type: "Shared",
+          price: 8000,
+          available: 5,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -37,7 +52,18 @@ const seedHostels = async () => {
       address: "Phase 6, DHA, Lahore",
       contact: "+923335556677",
       amenities: ["WiFi", "Security", "Mess", "CCTV"],
-      roomTypes: [{ type: "Double", price: 16000, available: 1 }],
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aecc",
+          type: "Double",
+          price: 16000,
+          available: 1,
+        },
+      ],
+      images: [
+        "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
+        "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
+      ],
       rating: 4,
       reviewsCount: 30,
       isAvailable: true,
@@ -50,9 +76,19 @@ const seedHostels = async () => {
       address: "Street 23, F-8, Islamabad",
       contact: "+923331112233",
       amenities: ["WiFi", "AC", "Laundry", "Security"],
-      roomTypes: [
-        { type: "Shared", price: 7000, available: 6 },
-        { type: "Single", price: 13000, available: 2 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aece",
+          type: "Shared",
+          price: 7000,
+          available: 6,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aecf",
+          type: "Single",
+          price: 13000,
+          available: 2,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -70,9 +106,19 @@ const seedHostels = async () => {
       address: "Block 6, PECHS, Karachi",
       contact: "+923338884445",
       amenities: ["WiFi", "AC", "Power Backup", "Mess"],
-      roomTypes: [
-        { type: "Single", price: 12000, available: 3 },
-        { type: "Double", price: 18000, available: 2 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aed1",
+          type: "Single",
+          price: 12000,
+          available: 3,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aed2",
+          type: "Double",
+          price: 18000,
+          available: 2,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -90,10 +136,25 @@ const seedHostels = async () => {
       address: "Near Central Park, Faisalabad",
       contact: "+923339996665",
       amenities: ["WiFi", "Security", "Laundry"],
-      roomTypes: [
-        { type: "Shared", price: 8000, available: 5 },
-        { type: "Single", price: 14000, available: 3 },
-        { type: "Double", price: 20000, available: 1 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aed4",
+          type: "Shared",
+          price: 8000,
+          available: 5,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aed5",
+          type: "Single",
+          price: 14000,
+          available: 3,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aed6",
+          type: "Double",
+          price: 20000,
+          available: 1,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -111,7 +172,14 @@ const seedHostels = async () => {
       address: "Near UET Peshawar",
       contact: "+923337777888",
       amenities: ["WiFi", "Mess", "Parking"],
-      roomTypes: [{ type: "Single", price: 12500, available: 4 }],
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aed8",
+          type: "Single",
+          price: 12500,
+          available: 4,
+        },
+      ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -128,7 +196,14 @@ const seedHostels = async () => {
       address: "Street 12, G-9, Islamabad",
       contact: "+923332223344",
       amenities: ["WiFi", "AC", "Security", "Mess"],
-      roomTypes: [{ type: "Shared", price: 7500, available: 7 }],
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aeda",
+          type: "Shared",
+          price: 7500,
+          available: 7,
+        },
+      ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -145,9 +220,19 @@ const seedHostels = async () => {
       address: "Near Good Earth, Garden Town",
       contact: "+923330001122",
       amenities: ["WiFi", "Mess", "Laundry"],
-      roomTypes: [
-        { type: "Double", price: 19000, available: 1 },
-        { type: "Shared", price: 8500, available: 4 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aedc",
+          type: "Double",
+          price: 19000,
+          available: 1,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aedd",
+          type: "Shared",
+          price: 8500,
+          available: 4,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -165,9 +250,19 @@ const seedHostels = async () => {
       address: "Block 3, Gulistan-e-Jauhar, Karachi",
       contact: "+923331234567",
       amenities: ["WiFi", "AC", "Security"],
-      roomTypes: [
-        { type: "Single", price: 15000, available: 2 },
-        { type: "Double", price: 21000, available: 1 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aedf",
+          type: "Single",
+          price: 15000,
+          available: 2,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aee0",
+          type: "Double",
+          price: 21000,
+          available: 1,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",
@@ -185,10 +280,25 @@ const seedHostels = async () => {
       address: "Near University Town, Peshawar",
       contact: "+923338800999",
       amenities: ["WiFi", "Mess", "Laundry", "Security"],
-      roomTypes: [
-        { type: "Single", price: 15500, available: 3 },
-        { type: "Double", price: 20000, available: 2 },
-        { type: "Shared", price: 7800, available: 6 },
+      roomType: [
+        {
+          _id: "6895cec0f2759ff2d113aee2",
+          type: "Single",
+          price: 15500,
+          available: 3,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aee3",
+          type: "Double",
+          price: 20000,
+          available: 2,
+        },
+        {
+          _id: "6895cec0f2759ff2d113aee4",
+          type: "Shared",
+          price: 7800,
+          available: 6,
+        },
       ],
       images: [
         "https://tse2.mm.bing.net/th?id=OIP.ix8gl1euNehctcXK-QTxFwHaE7&pid=Api&P=0&h=220",

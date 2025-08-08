@@ -10,7 +10,7 @@ const seedBookings = async () => {
   const bookingsData = [
     {
       _id: "687a908aadca98b6494c1899",
-      roomType: "Single",
+      roomType: "6895cec0f2759ff2d113aec8",
       price: 12000,
       status: "confirmed",
       paymentMethod: "Cash",
@@ -22,7 +22,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c189a",
-      roomType: "Single",
+      roomType: "6895cec0f2759ff2d113aecf",
       price: 15000,
       status: "pending",
       paymentMethod: "Bank Transfer",
@@ -34,7 +34,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c189b",
-      roomType: "Double",
+      roomType: "6895cec0f2759ff2d113aed2",
       price: 10000,
       status: "confirmed",
       paymentMethod: "Bank Transfer",
@@ -46,7 +46,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c189c",
-      roomType: "Single",
+      roomType: "6895cec0f2759ff2d113aed8",
       price: 9000,
       status: "cancelled",
       paymentMethod: "Cash",
@@ -58,19 +58,19 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c189d",
-      roomType: "Double",
+      roomType: "6895cec0f2759ff2d113aed6",
       price: 8500,
       status: "confirmed",
       paymentMethod: "Cash",
       fromDate: "2025-09-01T00:00:00.000Z",
       toDate: "2026-01-31T00:00:00.000Z",
       bookingDate: "2025-07-01T09:25:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c3",
+      hostel: "687a8a22cc7148c1e78a99c2",
       user: "687a8d8f69d717b002fa06a2",
     },
     {
       _id: "687a908aadca98b6494c189e",
-      roomType: "Shared",
+      roomType: "6895cec0f2759ff2d113aed4",
       price: 7000,
       status: "confirmed",
       paymentMethod: "Bank Transfer",
@@ -82,7 +82,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c189f",
-      roomType: "Shared",
+      roomType: "6895cec0f2759ff2d113aed4",
       price: 7000,
       status: "pending",
       paymentMethod: "Cash",
@@ -94,7 +94,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c18a0",
-      roomType: "Shared",
+      roomType: "6895cec0f2759ff2d113aecc",
       price: 8000,
       status: "confirmed",
       paymentMethod: "Bank Transfer",
@@ -106,7 +106,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c18a1",
-      roomType: "Shared",
+      roomType: "6895cec0f2759ff2d113aedf",
       price: 9000,
       status: "confirmed",
       paymentMethod: "Cash",
@@ -118,7 +118,7 @@ const seedBookings = async () => {
     },
     {
       _id: "687a908aadca98b6494c18a2",
-      roomType: "Double",
+      roomType: "6895cec0f2759ff2d113aeda",
       price: 11000,
       status: "confirmed",
       paymentMethod: "Bank Transfer",

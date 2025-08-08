@@ -151,7 +151,28 @@ Each route supports standard CRUD operations (**GET**, **POST**, **PUT**, **DELE
 
 You can explore and test all API endpoints using our shared Postman collection:
 
-📂 **HostelValy Postman Collection**
+📂 **HostelValy Postman Collection**: [View on Postman](https://galactic-eclipse-587759.postman.co/workspace/My-Workspace~afe2bc9b-58bc-4a8d-89e9-46ba42b47c95/collection/42859315-82d88a55-611d-48a6-bcb5-1450e4502fc3?action=share&creator=42859315&active-environment=42859315-529d16a1-d3d5-47e6-9b36-198b70e4e334)
+
+This Postman collection is named **hostelvaly-backend-api** and contains folders corresponding to the database collections (`hostels`, `users`, `bookings`, `visitRequests`, `reviews`). Each folder includes requests for all CRUD operations, for example, the **hostels** folder has:
+
+* GET All Hostels
+* GET Hostel by `_id`
+* POST Hostels
+* PUT Hostel by `_id`
+* DEL All Hostels
+* DEL Hostel by `_id`
+
+An environment named **hostelvaly-api-dev** is also included, with a variable:
+
+* `hostelApiUrl` = `http://127.0.0.1:3000/api`
+
+You can send requests like this:
+
+```
+{{hostelApiUrl}}/hostels
+```
+
+for fetching all hostels.
 
 ---
 

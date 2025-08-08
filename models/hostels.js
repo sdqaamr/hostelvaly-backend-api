@@ -1,5 +1,16 @@
 import mongoose from "mongoose";
 
+const roomTypeSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["Single", "Double", "Shared"],
+    default: "Shared",
+    required: true,
+  },
+  price: Number,
+  available: Number,
+});
+
 const hostelsSchema = mongoose.Schema({
   name: String,
   city: String,
@@ -7,21 +18,7 @@ const hostelsSchema = mongoose.Schema({
   address: String,
   contact: String,
   amenities: [String],
-  roomTypes: [
-    {
-      type: {
-        type: String,
-        enum: ["Single", "Double", "Shared"],
-      },
-      price: {
-        type: Number,
-      },
-      available: {
-        type: Number,
-        default: 0,
-      },
-    },
-  ],
+  roomType: [roomTypeSchema],
   images: [String],
   rating: Number,
   reviewsCount: Number,
