@@ -6,8 +6,23 @@ const hostelsSchema = mongoose.Schema({
   area: String,
   address: String,
   contact: String,
-  amenities: Array,
-  roomTypes: Object,
+  amenities: [String],
+  roomTypes: [
+    {
+      type: {
+        type: String,
+        enum: ["Single", "Double", "Shared"],
+      },
+      price: {
+        type: Number,
+      },
+      available: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  images: [String],
   rating: Number,
   reviewsCount: Number,
   isAvailable: Boolean,

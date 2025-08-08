@@ -9,7 +9,10 @@ const usersSchema = mongoose.Schema({
     default: "student",
   },
   otp: Number,
-  otpExpiresAt: Date,
+  otpExpiresAt: {
+    type: Date,
+    default: Date.now,
+  },
   password: String,
   profilePicture: {
     type: String,
@@ -18,8 +21,20 @@ const usersSchema = mongoose.Schema({
   },
   phone: String,
   city: String,
-  gender: String,
-  createdAt: Date,
+  gender: {
+    type: String,
+    enum: ["male", "female"],
+    default: "male",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: String,
+    enum: ["active", "inactive", "banned"],
+    default: "active",
+  },
   favorites: [
     {
       type: mongoose.Schema.Types.ObjectId,

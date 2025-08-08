@@ -3,11 +3,20 @@ import mongoose from "mongoose";
 const visitRequestsSchema = mongoose.Schema({
   fullName: String,
   phone: Number,
-  dob: Date,
   whatsappUpdates: Boolean,
-  visitDate: Date,
-  status: String,
-  createdAt: Date,
+  visitDate: {
+    type: Date,
+    default: Date.now,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "confirmed", "cancelled"],
+    default: "pending",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   notes: String,
   hostel: {
     type: mongoose.Schema.Types.ObjectId,

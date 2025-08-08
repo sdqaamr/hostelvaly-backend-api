@@ -3,7 +3,10 @@ import mongoose from "mongoose";
 const reviewsSchema = mongoose.Schema({
   rating: Number,
   comment: String,
-  postedAt: Date,
+  postedAt: {
+    type: Date,
+    default: Date.now,
+  },
   isVerified: Boolean,
   booking: {
     type: mongoose.Schema.Types.ObjectId,

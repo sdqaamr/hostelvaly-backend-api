@@ -6,23 +6,23 @@ This is the backend API for **HostelValy**, a smart and seamless hostel-finding 
 
 ## 🚀 Features
 
-- 🔐 **User Authentication**: Secure registration, login, and OTP verification.
-- 🏠 **Hostel Listings API**: Fetch and manage hostel properties with full details.
-- 📆 **Booking System**: Handle monthly hostel bookings with server-side validation.
-- 📩 **Visit Requests**: Allow users to request visits before booking.
-- ⭐ **Reviews**: Users can submit reviews and ratings for hostels they’ve stayed in.
-- 🗂️ **Modular Structure**: Organized routes, controllers, and models for scalability.
+* 🔐 **User Authentication**: Secure registration, login, and OTP verification.
+* 🏠 **Hostel Listings API**: Fetch and manage hostel properties with full details.
+* 📆 **Booking System**: Handle monthly hostel bookings with server-side validation.
+* 📩 **Visit Requests**: Allow users to request visits before booking.
+* ⭐ **Reviews**: Users can submit reviews and ratings for hostels they’ve stayed in.
+* 🗂️ **Modular Structure**: Organized routes, controllers, and models for scalability.
 
 ---
 
 ## 🧑‍💻 Tech Stack
 
-- **Node.js**
-- **Express.js**
-- **MongoDB (via Mongoose)**
-- **dotenv** for environment variable handling
-- **cors** for cross-origin API access
-- **morgan** for request logging
+* **Node.js**
+* **Express.js**
+* **MongoDB (via Mongoose)**
+* **dotenv** for environment variable handling
+* **cors** for cross-origin API access
+* **morgan** for request logging
 
 ---
 
@@ -44,39 +44,39 @@ The backend uses a MongoDB database with the following collections:
 
 ```
 📦 hostelvaly-backend-api
-🗄 config/
-│   └── database.js            # MongoDB connection setup
-├── controllers/              # Business logic for each entity
+├── config/                    # Configuration files
+│   └── database.js             # MongoDB connection setup
+├── controllers/                # Business logic for each entity
 │   ├── bookings.js
 │   ├── hostels.js
 │   ├── reviews.js
 │   ├── users.js
 │   └── visitRequests.js
-├── models/                   # Mongoose schemas
+├── models/                     # Mongoose schemas
 │   ├── Booking.js
 │   ├── Hostel.js
 │   ├── Review.js
 │   ├── User.js
 │   └── VisitRequest.js
-├── middlewares/             # Custom middlewares like ID validation
+├── middlewares/                # Custom middlewares like ID validation
 │   └── ValidateId.js
-├── routes/                   # API routes
+├── routes/                     # API routes
 │   ├── bookings.js
 │   ├── hostels.js
 │   ├── reviews.js
 │   ├── users.js
 │   └── visitRequests.js
-├── seeders/                  # Seeder files to populate database
+├── seeders/                    # Seeder files to populate database
 │   ├── seedBookings.js
 │   ├── seedHostels.js
 │   ├── seedReviews.js
 │   ├── seedUsers.js
 │   └── seedVisitRequests.js
-├── .example.env              # Environment variable example file
-├── index.js                  # Entry point and server setup
-├── run-seeder.js             # Seeder runner
-├── package.json              # Project metadata and scripts
-└── README.md                 # Project documentation
+├── .example.env                 # Environment variable example file
+├── index.js                     # Entry point and server setup
+├── run-seeder.js                 # Seeder runner
+├── package.json                  # Project metadata and scripts
+└── README.md                     # Project documentation
 ```
 
 ---
@@ -113,7 +113,7 @@ APP_URL="http://localhost:8081"
 npm run dev
 ```
 
-The server will start at: `http://127.0.0.1:3000`
+The server will start at: [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 To run in production mode:
 
@@ -121,9 +121,7 @@ To run in production mode:
 npm start
 ```
 
----
-
-## 🌱 Run Seeders
+### 🌱 Run Seeders
 
 Populate the database with initial data:
 
@@ -145,16 +143,24 @@ Make sure MongoDB is running locally before executing the seeder.
 | Visit Requests | `/api/visitRequests` |
 | Reviews        | `/api/reviews`       |
 
-Each route supports standard CRUD operations (GET, POST, PUT, DELETE).
+Each route supports standard CRUD operations (**GET**, **POST**, **PUT**, **DELETE**).
+
+---
+
+## 🔗 Postman Collection
+
+You can explore and test all API endpoints using our shared Postman collection:
+
+📂 **HostelValy Postman Collection**
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [ISC License](LICENSE).
+This project is licensed under the **ISC License**.
 
 ---
 
 ## 👤 Author
 
-> Developed with 💻 by Saddiqa and the HostelValy Backend Team.
+Developed with 💻 by **Saddiqa** and the **HostelValy Backend Team**.
