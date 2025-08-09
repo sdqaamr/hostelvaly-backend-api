@@ -1,4 +1,5 @@
 import Users from "../models/users.js";
+import bcrypt from "bcrypt";
 
 let getUsers = async (req, res) => {
   try {
@@ -82,21 +83,24 @@ let putUser = async (req, res) => {
   }
 };
 
-let postUsers = async (req, res) => {
+let signupUser = async (req, res) => {
   try {
-    let { fullName, role, phone, gender } = req.body;
+    let { fullName, email, password, confirmPassword } = req.body;
     let validationErrors = [];
     if (!fullName) {
       validationErrors.push("Full name is required");
     }
-    if (!role) {
-      validationErrors.push("Role is required");
+    if (!email) {
+      validationErrors.push("Email is required");
     }
-    if (!phone) {
-      validationErrors.push("Phone number is required");
+    if (!password) {
+      validationErrors.push("Password is required");
     }
-    if (!gender) {
-      validationErrors.push("Gender is required");
+    if (!confirmPassword) {
+      validationErrors.push("Password confirmation is required");
+    }
+    if (password !== confirmPassword) {
+      validationErrors.push("Passwords do not match");
     }
     if (validationErrors.length > 0) {
       return res.status(400).json({
@@ -106,18 +110,106 @@ let postUsers = async (req, res) => {
         error: validationErrors,
       });
     }
-    const user = new Users(req.body).populate(["favorites", "hostels"]);
-    await user.save();
-    res.status(201).json({
-      success: true,
-      message: "Data created successfully",
-      data: user,
-      error: null,
+    let userExist = await Users.findOne({ email: email });
+    if (userExist) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        data: null,
+        error: ["User with this email already exists"],
+      });
+    }
+    bcrypt.hash(password, 10, async (err, hash) => {
+      if (err) {
+        res.status(500).json({
+          success: false,
+          message: "Internal server error",
+          data: null,
+          error: err.message,
+        });
+      }
+      const user = new Users({ fullName, email, password: hash });
+      await user.save();
+      let tempUser = {
+        name: user.fullName,
+        email: user.email,
+        role: user.role,
+        profilePicture: user.profilePicture,
+        phone: user.phone,
+        city: user.city,
+        gender: user.gender,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        status: user.status,
+        favorites: user.favorites,
+        hostels: user.hostels,
+      };
+      res.status(201).json({
+        success: true,
+        message: "User created successfully",
+        data: tempUser,
+        error: null,
+      });
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       message: "Internal server error",
+      data: null,
+      error: error.message,
+    });
+  }
+};
+
+let loginUser = async (req, res) => {
+  try {
+    let { email, password } = req.body;
+    const user = await Users.findOne({ email: email });
+    if (!user) {
+      // return res.status(404).json({
+      //   success: false,
+      //   message: "User not found",
+      //   data: null,
+      //   error: null, //execution is successfull
+      // });
+      return res.status(401).json({
+        success: true,
+        message: "Authentication failed",
+        data: null,
+        error: ["Invalid email or password!"],
+      });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: true,
+        message: "Authentication failed",
+        data: null,
+        error: ["Invalid email or password!"],
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "User logged in successfully",
+      data: {
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        profilePicture: user.profilePicture,
+        phone: user.phone,
+        city: user.city,
+        gender: user.gender,
+        createdAt: user.createdAt,
+        status: user.status,
+        favorites: user.favorites,
+        hostels: user.hostels,
+      },
+      error: null,
+    });
+  } catch (error) {
+    res.status.apply(500).json({
+      success: false,
+      message: "Internal Server Error",
       data: null,
       error: error.message,
     });
@@ -183,4 +275,12 @@ let deleteUsers = async (req, res) => {
   }
 };
 
-export { getUsers, getUser, putUser, postUsers, deleteUser, deleteUsers };
+export {
+  getUsers,
+  getUser,
+  putUser,
+  signupUser,
+  loginUser,
+  deleteUser,
+  deleteUsers,
+};

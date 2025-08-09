@@ -2,7 +2,19 @@ import mongoose from "mongoose";
 
 const usersSchema = mongoose.Schema({
   fullName: String,
-  email: String,
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: function (v) {
+        return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(v);
+      },
+      message: (props) => `${props.value} is not a valid email!`,
+    },
+  },
   role: {
     type: String,
     enum: ["admin", "owner", "student"],
@@ -16,17 +28,19 @@ const usersSchema = mongoose.Schema({
   password: String,
   profilePicture: {
     type: String,
-    default:
-      "https://res.cloudinary.com/dz4qj1x5f/image/upload/v1709301234/hostelvaly/default-profile-picture.png",
+    default: "default.png",
   },
   phone: String,
   city: String,
   gender: {
     type: String,
     enum: ["male", "female"],
-    default: "male",
   },
   createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
     type: Date,
     default: Date.now,
   },
