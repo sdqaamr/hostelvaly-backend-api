@@ -1,5 +1,6 @@
 import Users from "../models/users.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 let getUsers = async (req, res) => {
   try {
@@ -188,21 +189,27 @@ let loginUser = async (req, res) => {
         error: ["Invalid email or password!"],
       });
     }
+    let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
     res.status(200).json({
       success: true,
       message: "User logged in successfully",
       data: {
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-        profilePicture: user.profilePicture,
-        phone: user.phone,
-        city: user.city,
-        gender: user.gender,
-        createdAt: user.createdAt,
-        status: user.status,
-        favorites: user.favorites,
-        hostels: user.hostels,
+        token: token,
+        user: {
+          fullName: user.fullName,
+          email: user.email,
+          role: user.role,
+          profilePicture: user.profilePicture,
+          phone: user.phone,
+          city: user.city,
+          gender: user.gender,
+          createdAt: user.createdAt,
+          status: user.status,
+          favorites: user.favorites,
+          hostels: user.hostels,
+        },
       },
       error: null,
     });
@@ -212,6 +219,80 @@ let loginUser = async (req, res) => {
       message: "Internal Server Error",
       data: null,
       error: error.message,
+    });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    let userId = req.user.id;
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    let errors = [];
+    if (!oldPassword) {
+      errors.push("Old password is required");
+    }
+    if (!newPassword) {
+      errors.push("New password is required");
+    }
+    if (!confirmPassword) {
+      errors.push("Password confirmation is required");
+    }
+    if (oldPassword === newPassword) {
+      errors.push("New password cannot be same as old password");
+    }
+    if (newPassword !== confirmPassword) {
+      errors.push("Passwords do not match");
+    }
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        data: null,
+        error: errors,
+      });
+    }
+    const user = await Users.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: null,
+      });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Change password failed",
+        data: null,
+        error: ["Invalid old password"],
+      });
+    }
+    bcrypt.hash(newPassword, 10, async (err, hash) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Internal Server Error",
+          data: null,
+          error: err.message,
+        });
+      }
+      user.password = hash;
+      await user.save();
+      res.status(200).json({
+        success: true,
+        message: "Password changed successfully",
+        data: null,
+        error: null,
+      });
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: null,
+      error: err.message,
     });
   }
 };
@@ -281,6 +362,7 @@ export {
   putUser,
   signupUser,
   loginUser,
+  changePassword,
   deleteUser,
   deleteUsers,
 };

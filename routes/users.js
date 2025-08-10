@@ -7,12 +7,13 @@ import {
   deleteUsers,
 } from "../controllers/users.js";
 import validateId from "../middlewares/validateId.js";
+import verifyToken from "../middlewares/auth.js";
 const router = express.Router();
 
 router.get("/", getUsers);
 router.get("/:id", validateId, getUser);
-router.put("/:id", validateId, putUser);
-router.delete("/:id", validateId, deleteUser);
-router.delete("/", deleteUsers);
+router.put("/", verifyToken, putUser);
+router.delete("/:id", verifyToken, validateId, deleteUser);
+router.delete("/", verifyToken, deleteUsers);
 
 export default router;

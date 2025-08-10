@@ -76,7 +76,7 @@ let putHostel = async (req, res) => {
   }
 };
 
-let postHostels = async (req, res) => {
+let postHostel = async (req, res) => {
   try {
     let { name, city, isAvailable } = req.body;
     let validationErrors = [];
@@ -175,7 +175,7 @@ export {
   getHostels,
   getHostel,
   putHostel,
-  postHostels,
+  postHostel,
   deleteHostels,
   deleteHostel,
 };

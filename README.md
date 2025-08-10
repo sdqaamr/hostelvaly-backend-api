@@ -6,12 +6,13 @@ This is the backend API for **HostelValy**, a smart and seamless hostel-finding 
 
 ## 🚀 Features
 
-* 🔐 **User Authentication**: Secure registration, login, and OTP verification.
+* 🔐 **User Authentication**: Secure registration, login, and OTP verification and password-change with JWT-based protection.
 * 🏠 **Hostel Listings API**: Fetch and manage hostel properties with full details.
 * 📆 **Booking System**: Handle monthly hostel bookings with server-side validation.
 * 📩 **Visit Requests**: Allow users to request visits before booking.
 * ⭐ **Reviews**: Users can submit reviews and ratings for hostels they’ve stayed in.
 * 🗂️ **Modular Structure**: Organized routes, controllers, and models for scalability.
+* 🛡️ **Auth Middleware**: Protects routes and automatically extracts user info from JWT.
 
 ---
 
@@ -23,6 +24,7 @@ This is the backend API for **HostelValy**, a smart and seamless hostel-finding 
 * **dotenv** for environment variable handling
 * **cors** for cross-origin API access
 * **morgan** for request logging
+* **jsonwebtoken** for secure token handling
 
 ---
 
@@ -59,8 +61,10 @@ The backend uses a MongoDB database with the following collections:
 │   ├── User.js
 │   └── VisitRequest.js
 ├── middlewares/                # Custom middlewares like ID validation
-│   └── ValidateId.js
+│   ├── validateId.js
+│   └── auth.js
 ├── routes/                     # API routes
+│   ├── authUsers.js
 │   ├── bookings.js
 │   ├── hostels.js
 │   ├── reviews.js
@@ -105,6 +109,10 @@ PORT=3000
 HOST="127.0.0.1"
 MONGODB_URI="mongodb://localhost:27017/hostel_valy"
 APP_URL="http://localhost:8081"
+JWT_SECRET="my_jwt_secret"
+JWT_EXPIRES_IN="1h"
+JWT_ISSUER="my_jwt_issuer"
+JWT_AUDIENCE="my_jwt_audience"
 ```
 
 ### 4. Run the Development Server
