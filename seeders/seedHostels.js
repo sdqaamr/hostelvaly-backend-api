@@ -1,6 +1,6 @@
+import { Hostels } from "../models/hostels.js";
 const seedHostels = async () => {
-  const module = await import("../models/hostels.js");
-  const Hostels = module.default;
+  
   const count = await Hostels.countDocuments();
   if (count > 0) {
     console.log("Hostels already seeded.");
@@ -43,6 +43,7 @@ const seedHostels = async () => {
       rating: 4.2,
       reviewsCount: 45,
       isAvailable: true,
+      user: "687a8d8f69d717b002fa06a1"
     },
     {
       _id: "687a8a22cc7148c1e78a99bf",
@@ -97,6 +98,7 @@ const seedHostels = async () => {
       rating: 4.5,
       reviewsCount: 22,
       isAvailable: false,
+      user: "687a8d8f69d717b002fa06a6"
     },
     {
       _id: "687a8a22cc7148c1e78a99c1",
@@ -127,6 +129,7 @@ const seedHostels = async () => {
       rating: 4.1,
       reviewsCount: 35,
       isAvailable: true,
+      user: "687a8d8f69d717b002fa06a3"
     },
     {
       _id: "687a8a22cc7148c1e78a99c2",
@@ -211,6 +214,7 @@ const seedHostels = async () => {
       rating: 4.4,
       reviewsCount: 27,
       isAvailable: false,
+      user: "687a8d8f69d717b002fa06a6"
     },
     {
       _id: "687a8a22cc7148c1e78a99c5",
@@ -271,6 +275,7 @@ const seedHostels = async () => {
       rating: 3.8,
       reviewsCount: 15,
       isAvailable: true,
+      user: "687a8d8f69d717b002fa06a3"
     },
     {
       _id: "687a8a22cc7148c1e78a99c7",

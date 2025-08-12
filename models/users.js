@@ -20,10 +20,13 @@ const usersSchema = mongoose.Schema({
     enum: ["admin", "owner", "student"],
     default: "student",
   },
-  otp: Number,
+  otp: {
+    type: String,
+    default: null,
+  },
   otpExpiresAt: {
     type: Date,
-    default: Date.now,
+    default: null,
   },
   password: String,
   profilePicture: {

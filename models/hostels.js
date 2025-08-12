@@ -10,6 +10,7 @@ const roomTypeSchema = new mongoose.Schema({
   price: Number,
   available: Number,
 });
+const RoomTypes = mongoose.model("RoomTypes", roomTypeSchema);
 
 const hostelsSchema = mongoose.Schema({
   name: String,
@@ -23,7 +24,11 @@ const hostelsSchema = mongoose.Schema({
   rating: Number,
   reviewsCount: Number,
   isAvailable: Boolean,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
+  }
 });
 const Hostels = new mongoose.model("Hostels", hostelsSchema);
 
-export default Hostels;
+export {RoomTypes, Hostels};

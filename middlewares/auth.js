@@ -38,4 +38,32 @@ let verifyToken = (req, res, next) => {
   }
 };
 
-export default verifyToken;
+const verifyAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+      data: null,
+      error: [
+        "You do not have permission to perform this action",
+      ],
+    });
+  }
+  next();
+}
+
+const verifyOwner = (req, res, next) => {
+  if (req.user.role !== "owner") {
+    return res.status(403).json({
+      success: false,
+      message: "Forbidden",
+      data: null,
+      error: [
+        "You do not have permission to perform this action",
+      ],
+    });
+  }
+  next();
+}
+
+export {verifyToken, verifyAdmin, verifyOwner};

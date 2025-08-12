@@ -66,7 +66,7 @@ const seedVisitRequests = async () => {
       createdAt: "2025-07-15T10:00:00.000Z",
       notes: "",
       hostel: "687a8a22cc7148c1e78a99c5",
-      user: "687ab0677e198b239e958ba7",
+      user: null,
     },
     {
       _id: "687a96e9cb59cdc88e6485fe",

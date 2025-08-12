@@ -6,13 +6,19 @@ let getVisitRequests = async (req, res) => {
       .select([
         "fullName",
         "phone",
-        "dob",
         "whatsappUpdates",
         "visitDate",
         "hostel",
         "user",
       ])
-      .populate(["hostel", "user"]);
+      .populate({
+        path: "hostel",
+        select: "name",
+      })
+      .populate({
+        path: "user",
+        select: "fullName",
+      });
     res.status(200).json({
       success: true,
       message: "VisitRequests fetched successfully",
@@ -36,13 +42,19 @@ let getVisitRequest = async (req, res) => {
       .select([
         "fullName",
         "phone",
-        "dob",
         "whatsappUpdates",
         "visitDate",
         "hostel",
         "user",
       ])
-      .populate(["hostel", "user"]);
+      .populate({
+        path: "hostel",
+        select: "name",
+      })
+      .populate({
+        path: "user",
+        select: "fullName",
+      });
     if (!visitRequest) {
       return res.status(404).json({
         success: false,
@@ -68,12 +80,73 @@ let getVisitRequest = async (req, res) => {
   }
 };
 
-let putVisitRequest = async (req, res) => {
+let createVisitRequest = async (req, res) => {
+  try {
+    let { hostel, fullName, phone, visitDate, whatsappUpdates, user } = req.body;
+    let validationErrors = [];
+    if (!fullName) {
+      validationErrors.push("Full name is required");
+    }
+    if (!phone) {
+      validationErrors.push("Phone number is required");
+    }
+    if (!visitDate) {
+      validationErrors.push("Visit date is required");
+    }
+    if (!hostel) {
+      validationErrors.push("Hostel ID is required");
+    }
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation errors",
+        data: null,
+        error: validationErrors,
+      });
+    }
+    let visitRequest = new VisitRequests({ fullName, phone, visitDate, whatsappUpdates, hostel, user });
+    await visitRequest.save();
+    await visitRequest.populate([
+  { path: "hostel", select: "name" },
+  { path: "user", select: "fullName" }
+]);
+    res.status(201).json({
+      success: true,
+      message: "Request created successfully",
+      data: visitRequest,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: null,
+      error: error.message,
+    });
+  }
+};
+
+let editVisitRequest = async (req, res) => {
   try {
     const id = req.params.id;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No fields provided to update",
+        data: null,
+        error: null,
+      });
+    }
     const visitRequest = await VisitRequests.findByIdAndUpdate(id, req.body, {
       new: true,
-    }).populate(["hostel", "user"]);
+    }).populate({
+        path: "hostel",
+        select: "name",
+      })
+      .populate({
+        path: "user",
+        select: "fullName",
+      });
     if (!visitRequest) {
       return res.status(404).json({
         success: false,
@@ -98,46 +171,7 @@ let putVisitRequest = async (req, res) => {
   }
 };
 
-let postVisitRequests = async (req, res) => {
-  try {
-    let { fullName, phone } = req.body;
-    let validationErrors = [];
-    if (!fullName) {
-      validationErrors.push("Full name is required");
-    }
-    if (!phone) {
-      validationErrors.push("Phone number is required");
-    }
-    if (validationErrors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation errors",
-        data: null,
-        error: validationErrors,
-      });
-    }
-    const visitRequest = new VisitRequests(req.body).populate([
-      "hostel",
-      "user",
-    ]);
-    await visitRequest.save();
-    res.status(201).json({
-      success: true,
-      message: "Request created successfully",
-      data: visitRequest,
-      error: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
-  }
-};
-
-let deleteVisitRequest = async (req, res) => {
+let cancelVisitRequest = async (req, res) => {
   try {
     let id = req.params.id;
     const visitRequest = await VisitRequests.findByIdAndDelete(id).populate([
@@ -171,9 +205,9 @@ let deleteVisitRequest = async (req, res) => {
 let deleteVisitRequests = async (req, res) => {
   try {
     const visitRequests = await VisitRequests.find().populate([
-      "hostel",
-      "user",
-    ]);
+  { path: "hostel", select: "name" },
+  { path: "user", select: "fullName" }
+]);
     if (visitRequests.length === 0) {
       return res.status(404).json({
         success: false,
@@ -202,8 +236,8 @@ let deleteVisitRequests = async (req, res) => {
 export {
   getVisitRequests,
   getVisitRequest,
-  putVisitRequest,
-  postVisitRequests,
-  deleteVisitRequest,
+  createVisitRequest,
+  editVisitRequest,
+  cancelVisitRequest,
   deleteVisitRequests,
 };

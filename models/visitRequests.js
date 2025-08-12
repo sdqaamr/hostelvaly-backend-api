@@ -2,8 +2,11 @@ import mongoose from "mongoose";
 
 const visitRequestsSchema = mongoose.Schema({
   fullName: String,
-  phone: Number,
-  whatsappUpdates: Boolean,
+  phone: String,
+  whatsappUpdates: {
+    type: Boolean,
+    default: false,
+  },
   visitDate: {
     type: Date,
     default: Date.now,

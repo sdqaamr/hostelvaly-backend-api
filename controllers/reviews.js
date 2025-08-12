@@ -2,18 +2,10 @@ import Reviews from "../models/reviews.js";
 
 let getReviews = async (req, res) => {
   try {
-    const reviews = await Reviews.find()
-      .select([
-        "rating",
-        "comment",
-        "postedAt",
-        "isVerified",
-        "createdAt",
-        "hostel",
-        "user",
-        "booking",
-      ])
-      .populate(["hostel", "user"]);
+    const reviews = await Reviews.find().populate([
+      { path: "hostel", select: "name" },
+      { path: "user", select: "fullName" },
+    ]);
     res.status(200).json({
       success: true,
       message: "Reviews fetched successfully",
@@ -33,18 +25,10 @@ let getReviews = async (req, res) => {
 let getReview = async (req, res) => {
   try {
     let id = req.params.id;
-    const review = await Reviews.findById(id)
-      .select([
-        "rating",
-        "comment",
-        "postedAt",
-        "isVerified",
-        "createdAt",
-        "hostel",
-        "user",
-        "booking",
-      ])
-      .populate(["hostel", "user"]);
+    const review = await Reviews.findById(id).populate([
+      { path: "hostel", select: "name" },
+      { path: "user", select: "fullName" },
+    ]);
     if (!review) {
       return res.status(404).json({
         success: false,
@@ -70,16 +54,79 @@ let getReview = async (req, res) => {
   }
 };
 
-let putReview = async (req, res) => {
+let createReview = async (req, res) => {
+  try {
+    let { rating, comment, hostel } = req.body;
+    let validationErrors = [];
+    if (!rating) {
+      validationErrors.push("Rating is required");
+    }
+    if (!comment) {
+      validationErrors.push("Comment message is required");
+    }
+    if (!hostel) {
+      validationErrors.push("Hostel ID is required");
+    }
+    if (validationErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation errors",
+        data: null,
+        error: validationErrors,
+      });
+    }
+    let user = req.user;
+    let review = new Reviews({ rating, comment, hostel, user: user.id });
+    await review.save();
+    await review.populate([
+  { path: "hostel", select: "name" },
+  { path: "user", select: "fullName" },
+]);
+    res.status(201).json({
+      success: true,
+      message: "Data created successfully",
+      data: review,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: null,
+      error: error.message,
+    });
+  }
+};
+
+let updateReview = async (req, res) => {
   try {
     const id = req.params.id;
-    const review = await Reviews.findByIdAndUpdate(id, req.body, {
-      new: true,
-    }).populate(["hostel", "user"]);
+    let reviewData = req.body;
+    let user = req.user;
+    let userId = user.id;
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No fields provided to update",
+        data: null,
+        error: null,
+      });
+    }
+    const review = await Reviews.findOneAndUpdate(
+      {
+        _id: id,
+        user: userId,
+      },
+      reviewData,
+      { new: true }
+    ).populate([
+      { path: "hostel", select: "name" },
+      { path: "user", select: "fullName" },
+    ]);
     if (!review) {
       return res.status(404).json({
         success: false,
-        message: "Review not found",
+        message: "Review can't be updated or not belongs to the user",
         data: null,
         error: null,
       });
@@ -100,53 +147,18 @@ let putReview = async (req, res) => {
   }
 };
 
-let postReviews = async (req, res) => {
-  try {
-    let { rating, comment } = req.body;
-    let validationErrors = [];
-    if (!rating) {
-      validationErrors.push("Rating is required");
-    }
-    if (!comment) {
-      validationErrors.push("Comment message is required");
-    }
-    if (validationErrors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation errors",
-        data: null,
-        error: validationErrors,
-      });
-    }
-    const review = new Reviews(req.body).populate(["hostel", "user"]);
-    await review.save();
-    res.status(201).json({
-      success: true,
-      message: "Data created successfully",
-      data: review,
-      error: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
-  }
-};
-
 let deleteReview = async (req, res) => {
   try {
     let id = req.params.id;
-    const review = await Reviews.findByIdAndDelete(id).populate([
-      "hostel",
-      "user",
-    ]);
-    if (!review) {
-      return res.status(404).json({
+    let user = req.user;
+    const review = await Reviews.deleteOne({
+      _id: id,
+      user: user.id,
+    });
+    if (review.deletedCount === 0) {
+      return res.status(200).json({
         success: false,
-        message: "Review not found",
+        message: "Review not found or not belongs to the user",
         data: null,
         error: null,
       });
@@ -169,7 +181,10 @@ let deleteReview = async (req, res) => {
 
 let deleteReviews = async (req, res) => {
   try {
-    const reviews = await Reviews.find().populate(["hostel", "user"]);
+    const reviews = await Reviews.find().populate([
+      { path: "hostel", select: "name" },
+      { path: "user", select: "fullName" },
+    ]);
     if (reviews.length === 0) {
       return res.status(404).json({
         success: false,
@@ -198,8 +213,8 @@ let deleteReviews = async (req, res) => {
 export {
   getReviews,
   getReview,
-  putReview,
-  postReviews,
+  createReview,
+  updateReview,
   deleteReview,
   deleteReviews,
 };

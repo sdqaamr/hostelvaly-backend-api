@@ -23,11 +23,24 @@ let getUsers = async (req, res) => {
   }
 };
 
-let getUser = async (req, res) => {
+let getProfile = async (req, res) => {
   try {
-    let id = req.params.id;
+    let id = req.user.id;
     const user = await Users.findById(id)
-      .select(["fullName", "email", "role", "city", "hostels", "favorites"])
+      .select([
+        "fullName",
+        "email",
+        "role",
+        "city",
+        "hostels",
+        "favorites",
+        "profilePicture",
+        "status",
+        "phone",
+        "createdAt",
+        "otp",
+        "otpExpiresAt",
+      ])
       .populate(["favorites", "hostels"]);
     if (!user) {
       return res.status(404).json({
@@ -41,11 +54,23 @@ let getUser = async (req, res) => {
       success: true,
       id: id,
       message: "User data by ID is fetched successfully",
-      data: user,
+      data: {
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        status: user.status,
+        profilePicture: user.profilePicture,
+        city: user.city,
+        phone: user.phone,
+        fullName: user.fullName,
+        otp: user.otp,
+        otpExpiresAt: user.otpExpiresAt,
+      },
       error: null,
     });
   } catch (error) {
-    res.status.apply(500).json({
+    res.status(500).json({
       success: false,
       message: "Internal Server Error",
       data: null,
@@ -54,39 +79,9 @@ let getUser = async (req, res) => {
   }
 };
 
-let putUser = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await Users.findByIdAndUpdate(id, req.body, {
-      new: true,
-    }).populate(["favorites", "hostels"]);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-        data: null,
-        error: null,
-      });
-    }
-    res.status(200).json({
-      success: true,
-      message: "Data updated successfully",
-      data: user,
-      error: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
-  }
-};
-
 let signupUser = async (req, res) => {
   try {
-    let { fullName, email, password, confirmPassword } = req.body;
+    let { fullName, email, password, confirmPassword, role } = req.body;
     let validationErrors = [];
     if (!fullName) {
       validationErrors.push("Full name is required");
@@ -129,26 +124,33 @@ let signupUser = async (req, res) => {
           error: err.message,
         });
       }
-      const user = new Users({ fullName, email, password: hash });
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      const otpExpiresAt = Date.now() + 10 * 60 * 1000;
+      const user = new Users({
+        fullName,
+        email,
+        password: hash,
+        role,
+        otp,
+        otpExpiresAt,
+      });
       await user.save();
-      let tempUser = {
-        name: user.fullName,
-        email: user.email,
-        role: user.role,
-        profilePicture: user.profilePicture,
-        phone: user.phone,
-        city: user.city,
-        gender: user.gender,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        status: user.status,
-        favorites: user.favorites,
-        hostels: user.hostels,
-      };
       res.status(201).json({
         success: true,
         message: "User created successfully",
-        data: tempUser,
+        data: {
+          fullName: user.fullName,
+          email: user.email,
+          role: user.role,
+          profilePicture: user.profilePicture,
+          phone: user.phone,
+          city: user.city,
+          gender: user.gender,
+          createdAt: user.createdAt,
+          status: user.status,
+          favorites: user.favorites,
+          hostels: user.hostels,
+        },
         error: null,
       });
     });
@@ -165,14 +167,11 @@ let signupUser = async (req, res) => {
 let loginUser = async (req, res) => {
   try {
     let { email, password } = req.body;
-    const user = await Users.findOne({ email: email });
+    const user = await Users.findOne({ email: email }).populate([
+      "favorites",
+      "hostels",
+    ]);
     if (!user) {
-      // return res.status(404).json({
-      //   success: false,
-      //   message: "User not found",
-      //   data: null,
-      //   error: null, //execution is successfull
-      // });
       return res.status(401).json({
         success: true,
         message: "Authentication failed",
@@ -189,9 +188,24 @@ let loginUser = async (req, res) => {
         error: ["Invalid email or password!"],
       });
     }
-    let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
+    if (user.status === "inactive") {
+      res.status(403).json({
+        success: false,
+        message: "Account is inactive",
+        data: null,
+        error: ["Please contact support"],
+      });
+    }
+    let token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
     res.status(200).json({
       success: true,
       message: "User logged in successfully",
@@ -214,7 +228,7 @@ let loginUser = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status.apply(500).json({
+    res.status(500).json({
       success: false,
       message: "Internal Server Error",
       data: null,
@@ -297,7 +311,48 @@ const changePassword = async (req, res) => {
   }
 };
 
-let deleteUser = async (req, res) => {
+let updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Comes from verifyToken middleware
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No fields provided to update",
+        data: null,
+        error: null,
+      });
+    }
+    const user = await Users.findByIdAndUpdate(userId, req.body, {
+      new: true,
+      runValidators: true,
+    }).populate(["favorites", "hostels"]);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Data updated successfully",
+      data: user,
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      data: null,
+      error: error.message,
+    });
+  }
+};
+
+let logout = async (req, res) => {
   try {
     let id = req.params.id;
     const user = await Users.findByIdAndDelete(id).populate([
@@ -358,11 +413,11 @@ let deleteUsers = async (req, res) => {
 
 export {
   getUsers,
-  getUser,
-  putUser,
+  getProfile,
   signupUser,
   loginUser,
   changePassword,
-  deleteUser,
+  updateProfile,
+  logout,
   deleteUsers,
 };

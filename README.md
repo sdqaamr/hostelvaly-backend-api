@@ -7,6 +7,7 @@ This is the backend API for **HostelValy**, a smart and seamless hostel-finding 
 ## 🚀 Features
 
 * 🔐 **User Authentication**: Secure registration, login, and OTP verification and password-change with JWT-based protection.
+* 🛡️ **User Authorization**: Recognizing user roles and assigning permissions accordingly.
 * 🏠 **Hostel Listings API**: Fetch and manage hostel properties with full details.
 * 📆 **Booking System**: Handle monthly hostel bookings with server-side validation.
 * 📩 **Visit Requests**: Allow users to request visits before booking.
@@ -61,10 +62,10 @@ The backend uses a MongoDB database with the following collections:
 │   ├── User.js
 │   └── VisitRequest.js
 ├── middlewares/                # Custom middlewares like ID validation
+│   ├── api-limit.js
 │   ├── validateId.js
 │   └── auth.js
 ├── routes/                     # API routes
-│   ├── authUsers.js
 │   ├── bookings.js
 │   ├── hostels.js
 │   ├── reviews.js
@@ -146,7 +147,7 @@ Make sure MongoDB is running locally before executing the seeder.
 | Entity         | Endpoint             |
 | -------------- | -------------------- |
 | Hostels        | `/api/hostels`       |
-| Users          | `/api/users`         |
+| Users          | `/api/auth`          |
 | Bookings       | `/api/bookings`      |
 | Visit Requests | `/api/visitRequests` |
 | Reviews        | `/api/reviews`       |
@@ -161,14 +162,7 @@ You can explore and test all API endpoints using our shared Postman collection:
 
 📂 **HostelValy Postman Collection**: [View on Postman](https://galactic-eclipse-587759.postman.co/workspace/My-Workspace~afe2bc9b-58bc-4a8d-89e9-46ba42b47c95/collection/42859315-82d88a55-611d-48a6-bcb5-1450e4502fc3?action=share&creator=42859315&active-environment=42859315-529d16a1-d3d5-47e6-9b36-198b70e4e334)
 
-This Postman collection is named **hostelvaly-backend-api** and contains folders corresponding to the database collections (`hostels`, `users`, `bookings`, `visitRequests`, `reviews`). Each folder includes requests for all CRUD operations, for example, the **hostels** folder has:
-
-* GET All Hostels
-* GET Hostel by `_id`
-* POST Hostels
-* PUT Hostel by `_id`
-* DEL All Hostels
-* DEL Hostel by `_id`
+This Postman collection is named **hostelvaly-backend-api** and contains folders corresponding to the database collections (`hostels`, `users`, `bookings`, `visitRequests`, `reviews`). Each folder includes requests for all CRUD operations.
 
 An environment named **hostelvaly-api-dev** is also included, with a variable:
 
