@@ -23,8 +23,8 @@ const bookingsSchema = mongoose.Schema(
     },
     paymentMethod: {
       type: String,
-      enum: ["Bank Transfer", "Cash"],
-      default: "Bank Transfer",
+      enum: ["bank transfer", "cash"],
+      default: "bank transfer",
     },
     fromDate: {
       type: Date,

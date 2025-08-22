@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 const roomTypeSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ["Single", "Double", "Shared"],
-    default: "Shared",
+    enum: ["Fan", "Cooler", "AC"],
+    default: "Fan",
     required: true,
   },
+  description: String,
   price: Number,
   available: Number,
 });
@@ -21,14 +22,16 @@ const hostelsSchema = mongoose.Schema({
   amenities: [String],
   roomType: [roomTypeSchema],
   images: [String],
+  description: String,
   rating: Number,
   reviewsCount: Number,
   isAvailable: Boolean,
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users"
-  }
+    ref: "Users",
+    required: false,
+  },
 });
 const Hostels = new mongoose.model("Hostels", hostelsSchema);
 
-export {RoomTypes, Hostels};
+export { RoomTypes, Hostels };

@@ -44,13 +44,11 @@ const verifyAdmin = (req, res, next) => {
       success: false,
       message: "Forbidden",
       data: null,
-      error: [
-        "You do not have permission to perform this action",
-      ],
+      error: ["You do not have permission to perform this action"],
     });
   }
   next();
-}
+};
 
 const verifyOwner = (req, res, next) => {
   if (req.user.role !== "owner") {
@@ -58,12 +56,10 @@ const verifyOwner = (req, res, next) => {
       success: false,
       message: "Forbidden",
       data: null,
-      error: [
-        "You do not have permission to perform this action",
-      ],
+      error: ["You do not have permission to perform this action"],
     });
   }
   next();
-}
+};
 
-export {verifyToken, verifyAdmin, verifyOwner};
+export { verifyToken, verifyAdmin, verifyOwner };

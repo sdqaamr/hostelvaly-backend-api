@@ -79,9 +79,9 @@ let createReview = async (req, res) => {
     let review = new Reviews({ rating, comment, hostel, user: user.id });
     await review.save();
     await review.populate([
-  { path: "hostel", select: "name" },
-  { path: "user", select: "fullName" },
-]);
+      { path: "hostel", select: "name" },
+      { path: "user", select: "fullName" },
+    ]);
     res.status(201).json({
       success: true,
       message: "Data created successfully",

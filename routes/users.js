@@ -7,9 +7,9 @@ import {
   updateProfile,
   changePassword,
   logout,
-  deleteUsers, 
+  deleteUsers,
 } from "../controllers/users.js";
-import {verifyToken, verifyAdmin, verifyOwner} from "../middlewares/auth.js";
+import { verifyToken, verifyAdmin } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.get("/users", verifyToken, verifyAdmin, getUsers);

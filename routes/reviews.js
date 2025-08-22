@@ -8,7 +8,7 @@ import {
   deleteReviews,
 } from "../controllers/reviews.js";
 import validateId from "../middlewares/validateId.js";
-import {verifyToken, verifyAdmin} from "../middlewares/auth.js";
+import { verifyToken, verifyAdmin } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.get("/", getReviews);
