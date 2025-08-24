@@ -26,7 +26,7 @@ const hostelsSchema = mongoose.Schema({
   rating: Number,
   reviewsCount: Number,
   isAvailable: Boolean,
-  user: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
     required: false,

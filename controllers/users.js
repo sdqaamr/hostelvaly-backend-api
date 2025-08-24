@@ -322,6 +322,8 @@ let updateProfile = async (req, res) => {
         error: null,
       });
     }
+
+    // Prevent email ,otp and role updates etc.
     const user = await Users.findByIdAndUpdate(userId, req.body, {
       new: true,
       runValidators: true,

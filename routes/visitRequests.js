@@ -8,14 +8,14 @@ import {
   deleteVisitRequests,
 } from "../controllers/visitRequests.js";
 import validateId from "../middlewares/validateId.js";
-import { verifyToken, verifyAdmin } from "../middlewares/auth.js";
+import { verifyToken } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.get("/", verifyToken, verifyAdmin, getVisitRequests);
+router.get("/", verifyToken, getVisitRequests);
 router.get("/:id", validateId, getVisitRequest);
 router.post("/create-new", createVisitRequest);
 router.put("/update/:id", validateId, editVisitRequest);
 router.delete("/cancel/:id", validateId, cancelVisitRequest);
-router.delete("/", verifyToken, verifyAdmin, deleteVisitRequests);
+router.delete("/", verifyToken, deleteVisitRequests);
 
 export default router;

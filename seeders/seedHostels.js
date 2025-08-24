@@ -48,7 +48,7 @@ const seedHostels = async () => {
       rating: 4.2,
       reviewsCount: 45,
       isAvailable: true,
-      user: "687a8d8f69d717b002fa06a1",
+      owner: "687a8d8f69d717b002fa06a1",
       description:
         "Located in Johar Town, Lahore, near Emporium Mall, this hostel offers a peaceful and secure environment suitable for both students and professionals. Its prime location provides easy access to shopping centers, restaurants, and public transport, ensuring convenience in daily life. Residents can enjoy a balanced lifestyle with nearby recreational and essential facilities. The surrounding area adds to the comfort and security, making it an ideal living choice.",
     },
@@ -77,6 +77,7 @@ const seedHostels = async () => {
       rating: 4,
       reviewsCount: 30,
       isAvailable: true,
+      owner: "687a8d8f69d717b002fa06a1",
       description:
         "Modern hostel in Phase 6, DHA, Lahore, offering a homely atmosphere complemented by 24/7 security and high-speed internet for a comfortable stay. The location is surrounded by cafes, gyms, and study hubs, providing residents with both convenience and lifestyle options. Ideal for students and professionals, it ensures a balanced mix of work, study, and leisure. Its safe and vibrant neighborhood makes it a perfect choice for modern living.",
     },
@@ -113,7 +114,7 @@ const seedHostels = async () => {
       rating: 4.5,
       reviewsCount: 22,
       isAvailable: false,
-      user: "687a8d8f69d717b002fa06a6",
+      owner: "687a8d8f69d717b002fa06a6",
       description:
         "Located in F-8, Islamabad, on Street 23, this hostel offers a quiet residential setting with beautiful surroundings that create a peaceful living environment. Its strategic location ensures quick access to educational institutions, making it ideal for students. The area is also close to offices, catering to working professionals seeking convenience. With well-maintained streets and a calm atmosphere, it provides both comfort and accessibility.",
     },
@@ -150,7 +151,7 @@ const seedHostels = async () => {
       rating: 4.1,
       reviewsCount: 35,
       isAvailable: true,
-      user: "687a8d8f69d717b002fa06a3",
+      owner: "687a8d8f69d717b002fa06a3",
       description:
         "Located in Block 6, PECHS, Karachi, this hostel offers a peaceful and secure environment suitable for both students and professionals. Its prime location ensures easy access to shopping centers, making daily needs convenient to fulfill. The neighborhood is calm and well-maintained, providing a comfortable living experience. Public transport options are nearby, ensuring smooth connectivity across the city.",
     },
@@ -195,6 +196,7 @@ const seedHostels = async () => {
       rating: 3.9,
       reviewsCount: 18,
       isAvailable: true,
+      owner: "687a8d8f69d717b002fa06a3",
       description:
         "Located near Central Park on Jaranwala Road, Faisalabad, this hostel offers a secure and comfortable living environment for female students. Its convenient location provides quick access to essential city amenities, making daily life more convenient. The surroundings are peaceful, promoting a safe and focused atmosphere for studies. Public transport is readily available, ensuring easy connectivity to all parts of the city.",
     },
@@ -223,6 +225,7 @@ const seedHostels = async () => {
       rating: 4.3,
       reviewsCount: 40,
       isAvailable: true,
+      owner: "687a8d8f69d717b002fa06a3",
       description:
         "Located near UET in University Town, Peshawar, this hostel is ideal for students seeking both comfort and convenience. Its prime location ensures close proximity to major educational institutes, making daily commutes hassle-free. The environment is designed to support a focused and relaxed lifestyle. Public transport options are easily accessible, connecting residents to the rest of the city with ease.",
     },
@@ -251,7 +254,7 @@ const seedHostels = async () => {
       rating: 4.4,
       reviewsCount: 27,
       isAvailable: false,
-      user: "687a8d8f69d717b002fa06a6",
+      owner: "687a8d8f69d717b002fa06a6",
       description:
         "Located on Street 12, G-9, Islamabad, this hostel offers a secure and peaceful environment ideal for students. Its location provides quick and convenient access to shopping centers, making daily errands effortless. The calm surroundings create a perfect atmosphere for study and relaxation. Public transport is readily available, ensuring easy travel across the city.",
     },
@@ -288,6 +291,7 @@ const seedHostels = async () => {
       rating: 4,
       reviewsCount: 20,
       isAvailable: true,
+      owner: "687a8d8f69d717b002fa06a6",
       description:
         "Located near Good Earth, Garden Town, Lahore, this boys’ hostel offers a comfortable living environment with all essential amenities. Its prime location ensures easy access to nearby markets, making daily shopping convenient. The surrounding area is safe and student-friendly, ideal for focused study and rest. Public transport is easily available, ensuring quick connectivity to other parts of the city.",
     },
@@ -324,7 +328,7 @@ const seedHostels = async () => {
       rating: 3.8,
       reviewsCount: 15,
       isAvailable: true,
-      user: "687a8d8f69d717b002fa06a3",
+      owner: "687a8d8f69d717b002fa06a3",
       description:
         "Located in Block 3, Gulistan-e-Jauhar, Karachi, this hostel offers a secure and peaceful environment for students. Its location ensures easy access to essential city facilities, making daily life convenient. The peaceful surroundings provide a comfortable atmosphere for studying and resting. Public transport options are nearby, ensuring smooth connectivity to other parts of the city.",
     },
@@ -369,6 +373,7 @@ const seedHostels = async () => {
       rating: 4.1,
       reviewsCount: 32,
       isAvailable: true,
+      owner: "687a8d8f69d717b002fa06a6",
       description:
         "Located near University Town, Peshawar, this hostel offers a comfortable stay with all basic amenities. It provides easy access to nearby universities, making it ideal for students. The environment is peaceful and conducive for study and rest. Public transport is readily available, ensuring convenient travel across the city.",
     },

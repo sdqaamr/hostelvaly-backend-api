@@ -2,7 +2,15 @@ import { Hostels } from "../models/hostels.js";
 
 let getHostels = async (req, res) => {
   try {
-    const hostels = await Hostels.find().populate("user", ["fullName"]);
+    // Todo-Siddiqua:
+    // Add pagination
+    // Add select fields to return only specific fields
+
+    //Todo-AR:
+    // Add filtering by city, availability, rating, etc.
+    // Add sorting by price, rating, etc.
+    // Add search by name or description
+    const hostels = await Hostels.find().populate("owner", ["fullName"]);
     res.status(200).json({
       success: true,
       message: "Hostels data fetched successfully",
@@ -22,7 +30,7 @@ let getHostels = async (req, res) => {
 let getHostel = async (req, res) => {
   try {
     let id = req.params.id;
-    const hostel = await Hostels.findById(id).populate("user", ["fullName"]);
+    const hostel = await Hostels.findById(id).populate("owner", ["fullName"]);
     if (!hostel) {
       return res.status(404).json({
         success: false,
@@ -33,7 +41,6 @@ let getHostel = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      id: id,
       message: "Hostel data by ID is fetched successfully",
       data: hostel,
       error: null,
@@ -70,9 +77,9 @@ let addNewHostel = async (req, res) => {
       });
     }
     let user = req.user;
-    let hostel = new Hostels({ name, city, isAvailable, user: user.id });
+    let hostel = new Hostels({ name, city, isAvailable, owner: user.id });
     await hostel.save();
-    await hostel.populate("user", ["fullName"]);
+    await hostel.populate("owner", ["fullName"]);
     res.status(201).json({
       success: true,
       message: "Hostel added successfully",
@@ -106,13 +113,13 @@ let updateHostel = async (req, res) => {
     const hostel = await Hostels.findOneAndUpdate(
       {
         _id: id,
-        user: userId, // Ensure the product belongs to authorized user
+        owner: userId, // Ensure the product belongs to authorized user
       },
       hostelData,
       {
         new: true, // Return the updated document
       }
-    ).populate("user", ["fullName"]);
+    ).populate("owner", ["fullName"]);
     if (!hostel) {
       return res.status(400).json({
         success: false,
@@ -143,8 +150,8 @@ let deleteHostel = async (req, res) => {
     let user = req.user; // get the authenticated user from request
     const hostel = await Hostels.deleteOne({
       _id: id,
-      user: user.id,
-    }).populate("user", ["fullName"]);
+      owner: user.id,
+    });
     if (hostel.deletedCount === 0) {
       return res.status(200).json({
         success: false,
@@ -169,39 +176,4 @@ let deleteHostel = async (req, res) => {
   }
 };
 
-let deleteHostels = async (req, res) => {
-  try {
-    const hostels = await Hostels.find();
-    if (hostels.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No more data to delete",
-        data: null,
-        error: null,
-      });
-    }
-    await Hostels.deleteMany().populate("user", ["fullName"]);
-    res.status(200).json({
-      success: true,
-      message: "All hostels are removed successfully",
-      data: hostels,
-      error: null,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
-  }
-};
-
-export {
-  getHostels,
-  getHostel,
-  addNewHostel,
-  updateHostel,
-  deleteHostel,
-  deleteHostels,
-};
+export { getHostels, getHostel, addNewHostel, updateHostel, deleteHostel };

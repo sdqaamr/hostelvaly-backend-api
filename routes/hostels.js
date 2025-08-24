@@ -5,23 +5,15 @@ import {
   addNewHostel,
   updateHostel,
   deleteHostel,
-  deleteHostels,
 } from "../controllers/hostels.js";
 import validateId from "../middlewares/validateId.js";
-import { verifyAdmin, verifyOwner, verifyToken } from "../middlewares/auth.js";
+import { verifyToken } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.get("/all-data", getHostels);
+router.get("/", getHostels);
 router.get("/:id", validateId, getHostel);
-router.post("/add-new", verifyToken, addNewHostel);
-router.put(
-  "/update-hostel/:id",
-  verifyToken,
-  verifyOwner,
-  validateId,
-  updateHostel
-);
-router.delete("/:id", verifyToken, verifyOwner, validateId, deleteHostel);
-router.delete("/", verifyToken, verifyAdmin, deleteHostels);
+router.post("/", verifyToken, addNewHostel);
+router.put("/:id", verifyToken, validateId, updateHostel);
+router.delete("/:id", verifyToken, validateId, deleteHostel);
 
 export default router;
