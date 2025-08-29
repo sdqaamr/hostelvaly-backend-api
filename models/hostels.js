@@ -11,7 +11,6 @@ const roomTypeSchema = new mongoose.Schema({
   price: Number,
   available: Number,
 });
-const RoomTypes = mongoose.model("RoomTypes", roomTypeSchema);
 
 const hostelsSchema = mongoose.Schema({
   name: String,
@@ -34,4 +33,4 @@ const hostelsSchema = mongoose.Schema({
 });
 const Hostels = new mongoose.model("Hostels", hostelsSchema);
 
-export { RoomTypes, Hostels };
+export { roomTypeSchema, Hostels };

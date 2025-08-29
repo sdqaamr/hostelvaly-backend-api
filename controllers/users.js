@@ -1,6 +1,7 @@
 import Users from "../models/users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import sendEmail from "../utils/send-mail.js";
 
 let getUsers = async (req, res) => {
   try {
@@ -115,44 +116,37 @@ let signupUser = async (req, res) => {
         error: ["User with this email already exists"],
       });
     }
-    bcrypt.hash(password, 10, async (err, hash) => {
-      if (err) {
-        res.status(500).json({
-          success: false,
-          message: "Internal server error",
-          data: null,
-          error: err.message,
-        });
-      }
-      const otp = Math.floor(1000 + Math.random() * 9000);
-      const otpExpiresAt = Date.now() + 10 * 60 * 1000;
-      const user = new Users({
-        fullName,
-        email,
-        password: hash,
-        role,
-        otp,
-        otpExpiresAt,
-      });
-      await user.save();
-      res.status(201).json({
-        success: true,
-        message: "User created successfully",
-        data: {
-          fullName: user.fullName,
-          email: user.email,
-          role: user.role,
-          profilePicture: user.profilePicture,
-          phone: user.phone,
-          city: user.city,
-          gender: user.gender,
-          createdAt: user.createdAt,
-          status: user.status,
-          favorites: user.favorites,
-          hostels: user.hostels,
-        },
-        error: null,
-      });
+    const hash = await bcrypt.hash(password, 10);
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    const otpExpiresAt = Date.now() + 10 * 60 * 1000;
+    const user = new Users({
+      fullName,
+      email,
+      password: hash,
+      role,
+      otp,
+      otpExpiresAt,
+      active: false,
+    });
+    await user.save();
+    sendEmail(email, "Verify your email", String(otp));
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      data: {
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        profilePicture: user.profilePicture,
+        phone: user.phone,
+        city: user.city,
+        gender: user.gender,
+        createdAt: user.createdAt,
+        status: user.status,
+        favorites: user.favorites,
+        hostels: user.hostels,
+      },
+      error: null,
     });
   } catch (error) {
     res.status(500).json({
@@ -164,6 +158,10 @@ let signupUser = async (req, res) => {
   }
 };
 
+// let verifyOtp = async (req, res) => {
+
+// }
+
 let loginUser = async (req, res) => {
   try {
     let { email, password } = req.body;
@@ -173,7 +171,7 @@ let loginUser = async (req, res) => {
     ]);
     if (!user) {
       return res.status(401).json({
-        success: true,
+        success: false,
         message: "Authentication failed",
         data: null,
         error: ["Invalid email or password!"],
@@ -182,18 +180,18 @@ let loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
-        success: true,
+        success: false,
         message: "Authentication failed",
         data: null,
         error: ["Invalid email or password!"],
       });
     }
     if (user.status === "inactive") {
-      res.status(403).json({
+      return res.status(403).json({
         success: false,
         message: "Account is inactive",
         data: null,
-        error: ["Please contact support"],
+        error: ["Please verify your email"],
       });
     }
     let token = jwt.sign(
@@ -283,30 +281,21 @@ const changePassword = async (req, res) => {
         error: ["Invalid old password"],
       });
     }
-    bcrypt.hash(newPassword, 10, async (err, hash) => {
-      if (err) {
-        return res.status(500).json({
-          success: false,
-          message: "Internal Server Error",
-          data: null,
-          error: err.message,
-        });
-      }
-      user.password = hash;
-      await user.save();
-      res.status(200).json({
-        success: true,
-        message: "Password changed successfully",
-        data: null,
-        error: null,
-      });
+    const hash = await bcrypt.hash(newPassword, 10);
+    user.password = hash;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+      data: null,
+      error: null,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
       data: null,
-      error: err.message,
+      error: error.message,
     });
   }
 };
@@ -323,7 +312,19 @@ let updateProfile = async (req, res) => {
       });
     }
 
-    // Prevent email ,otp and role updates etc.
+    // Prevent email, otp, role, and password updates
+    const forbiddenFields = [
+      "email",
+      "role",
+      "otp",
+      "otpExpiresAt",
+      "password",
+    ];
+    forbiddenFields.forEach((field) => {
+      if (field in req.body) {
+        delete req.body[field];
+      }
+    });
     const user = await Users.findByIdAndUpdate(userId, req.body, {
       new: true,
       runValidators: true,

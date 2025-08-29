@@ -50,7 +50,7 @@ const usersSchema = mongoose.Schema({
   status: {
     type: String,
     enum: ["active", "inactive", "banned"],
-    default: "active",
+    default: "inactive",
   },
   favorites: [
     {

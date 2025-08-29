@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-import dotenv from "dotenv";
 import hostelRoutes from "./routes/hostels.js";
 import userRoutes from "./routes/users.js";
 import bookingRoutes from "./routes/bookings.js";
@@ -9,16 +8,16 @@ import reviewRoutes from "./routes/reviews.js";
 import { apiRateLimit } from "./middlewares/api-limit.js";
 import dbConnect from "./config/database.js";
 import cors from "cors";
+import config from "./config/config.js";
 
 const corsOptions = {
-  origin: process.env.APP_URL,
+  origin: config.appUrl,
   optionsSuccessStatus: 200,
 };
 
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
-dotenv.config();
 app.use(cors(corsOptions));
 
 dbConnect();
@@ -43,8 +42,8 @@ app.use((req, res, next) => {
   res.status(404).json({ error: "Route not found" });
 });
 
-const port = process.env.PORT || 3000;
-const host = process.env.HOST || "localhost";
+const port = config.port || 3000;
+const host = config.host || "localhost";
 app.listen(port, host, () => {
   console.log(`Server is running on http://${host}:${port}`);
 });

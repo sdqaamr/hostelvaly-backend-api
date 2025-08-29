@@ -180,7 +180,7 @@ for fetching all hostels.
 
 ## 🔗 Related Projects
 
-* 📦 **Frontend App** → [HostelValy Frontendend](https://github.com/sdqaamr/hostelvaly-frontend)
+* 📦 **Frontend App** → [HostelValy Frontend](https://github.com/sdqaamr/hostelvaly-frontend)
 
 ---
 
@@ -195,5 +195,5 @@ This project is licensed under the **ISC License**.
 | Role         | Name                                                                 |
 | ------------ | -------------------------------------------------------------------- |
 | 🧑‍💻 Author   | [Saddiqa](https://github.com/sdqaamr) – Developer of HostelValy Backend API |
-| 🎓 Mentor    | [Sir Allah Rakha](https://github.com/your-mentor-github) – Project Supervisor |
+| 🎓 Mentor    | [Sir Allah Rakha](https://github.com/sudo-allahrakha) – Project Supervisor |
 
