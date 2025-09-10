@@ -1,19 +1,21 @@
 import express from "express";
 import {
-  
   getProfile,
   signupUser,
+  verifyEmail,
+  resendOtp,
   loginUser,
   updateProfile,
   changePassword,
   logout,
-  
 } from "../controllers/users.js";
 import { verifyToken } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.get("/me", verifyToken, getProfile);
 router.post("/register", signupUser);
+router.post("/verify-email", verifyEmail);
+router.post("/resend-otp", resendOtp);
 router.post("/login", loginUser);
 router.put("/", verifyToken, updateProfile);
 router.put("/change-password", verifyToken, changePassword);

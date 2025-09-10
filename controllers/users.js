@@ -19,7 +19,7 @@ let getUsers = async (req, res) => {
       success: false,
       message: "Internal Server Error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -56,6 +56,7 @@ let getProfile = async (req, res) => {
       id: id,
       message: "User data by ID is fetched successfully",
       data: {
+        fullName: user.fullName,
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
@@ -64,8 +65,6 @@ let getProfile = async (req, res) => {
         profilePicture: user.profilePicture,
         city: user.city,
         phone: user.phone,
-        fullName: user.fullName,
-        otp: user.otp,
         otpExpiresAt: user.otpExpiresAt,
       },
       error: null,
@@ -75,7 +74,7 @@ let getProfile = async (req, res) => {
       success: false,
       message: "Internal Server Error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -126,7 +125,6 @@ let signupUser = async (req, res) => {
       role,
       otp,
       otpExpiresAt,
-      active: false,
     });
     await user.save();
     sendEmail(email, "Verify your email", String(otp));
@@ -143,6 +141,7 @@ let signupUser = async (req, res) => {
         gender: user.gender,
         createdAt: user.createdAt,
         status: user.status,
+        otpExpiresAt: user.otpExpiresAt,
         favorites: user.favorites,
         hostels: user.hostels,
       },
@@ -153,14 +152,138 @@ let signupUser = async (req, res) => {
       success: false,
       message: "Internal server error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
 
-// let verifyOtp = async (req, res) => {
+// Verify Email with OTP
+const verifyEmail = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    let errors = [];
+    if (!email) {
+      errors.push("Email is required");
+    }
+    if (!otp) {
+      errors.push("OTP is required");
+    }
+    if (errors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation errors",
+        data: null,
+        error: errors,
+      });
+    }
+    const user = await Users.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: null,
+      });
+    }
+    // Check OTP validity
+    if (user.otp !== Number(otp)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+        data: null,
+        error: ["The OTP you entered is incorrect"],
+      });
+    }
+    if (user.otpExpiresAt < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired",
+        data: null,
+        error: ["Your OTP has expired. Please request a new one."],
+      });
+    }
+    // Update user status after successful verification
+    user.status = "active";
+    user.otp = null;
+    user.otpExpiresAt = null;
+    await user.save();
 
-// }
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      data: {
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      },
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: null,
+      error: [error.message],
+    });
+  }
+};
+
+// Resend OTP
+const resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+        data: null,
+        error: ["Please provide an email to resend OTP"],
+      });
+    }
+    const user = await Users.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: null,
+      });
+    }
+    if (user.status === "active") {
+      return res.status(400).json({
+        success: false,
+        message: "Email already verified",
+        data: null,
+        error: [
+          "You cannot request OTP because your email is already verified",
+        ],
+      });
+    }
+    // Generate new OTP
+    const otp = Math.floor(1000 + Math.random() * 9000);
+    user.otp = otp;
+    user.otpExpiresAt = Date.now() + 10 * 60 * 1000;
+    await user.save();
+
+    // Send OTP email
+    await sendEmail(user.email, "Resend OTP - Verify your email", String(otp));
+    console.log("📧 Resending OTP:", otp, "to", user.email);
+    res.status(200).json({
+      success: true,
+      message: "OTP resent successfully",
+      data: { email: user.email },
+      error: null,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: null,
+      error: [error.message],
+    });
+  }
+};
 
 let loginUser = async (req, res) => {
   try {
@@ -230,7 +353,7 @@ let loginUser = async (req, res) => {
       success: false,
       message: "Internal Server Error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -276,7 +399,7 @@ const changePassword = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: "Change password failed",
+        message: "Password cannot be changed",
         data: null,
         error: ["Invalid old password"],
       });
@@ -295,7 +418,7 @@ const changePassword = async (req, res) => {
       success: false,
       message: "Internal Server Error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -311,7 +434,6 @@ let updateProfile = async (req, res) => {
         error: null,
       });
     }
-
     // Prevent email, otp, role, and password updates
     const forbiddenFields = [
       "email",
@@ -319,6 +441,11 @@ let updateProfile = async (req, res) => {
       "otp",
       "otpExpiresAt",
       "password",
+      "createdAt",
+      "updatedAt",
+      "status",
+      "favorites",
+      "hostels",
     ];
     forbiddenFields.forEach((field) => {
       if (field in req.body) {
@@ -328,8 +455,18 @@ let updateProfile = async (req, res) => {
     const user = await Users.findByIdAndUpdate(userId, req.body, {
       new: true,
       runValidators: true,
-    }).populate(["favorites", "hostels"]);
-
+    }).select([
+      "fullName",
+      "email",
+      "role",
+      "city",
+      "profilePicture",
+      "status",
+      "phone",
+      "createdAt",
+      "updatedAt",
+      "otpExpiresAt",
+    ]);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -338,7 +475,6 @@ let updateProfile = async (req, res) => {
         error: null,
       });
     }
-
     res.status(200).json({
       success: true,
       message: "Data updated successfully",
@@ -350,7 +486,7 @@ let updateProfile = async (req, res) => {
       success: false,
       message: "Internal server error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -409,7 +545,7 @@ let deleteUsers = async (req, res) => {
       success: false,
       message: "Internal server error",
       data: null,
-      error: error.message,
+      error: [error.message],
     });
   }
 };
@@ -418,6 +554,8 @@ export {
   getUsers,
   getProfile,
   signupUser,
+  verifyEmail,
+  resendOtp,
   loginUser,
   changePassword,
   updateProfile,
