@@ -40,7 +40,7 @@ let getProfile = async (req, res) => {
         "phone",
         "createdAt",
         "otp",
-        "otpExpiresAt",
+        "otpExpiresIn",
       ])
       .populate(["favorites", "hostels"]);
     if (!user) {
@@ -65,7 +65,7 @@ let getProfile = async (req, res) => {
         profilePicture: user.profilePicture,
         city: user.city,
         phone: user.phone,
-        otpExpiresAt: user.otpExpiresAt,
+        otpExpiresIn: user.otpExpiresIn,
       },
       error: null,
     });
@@ -117,14 +117,14 @@ let signupUser = async (req, res) => {
     }
     const hash = await bcrypt.hash(password, 10);
     const otp = Math.floor(1000 + Math.random() * 9000);
-    const otpExpiresAt = Date.now() + 10 * 60 * 1000;
+    const otpExpiresIn = Date.now() + 10 * 60 * 1000;
     const user = new Users({
       fullName,
       email,
       password: hash,
       role,
       otp,
-      otpExpiresAt,
+      otpExpiresIn,
     });
     await user.save();
     sendEmail(email, "Verify your email", String(otp));
@@ -141,7 +141,7 @@ let signupUser = async (req, res) => {
         gender: user.gender,
         createdAt: user.createdAt,
         status: user.status,
-        otpExpiresAt: user.otpExpiresAt,
+        otpExpiresIn: user.otpExpiresIn,
         favorites: user.favorites,
         hostels: user.hostels,
       },
@@ -194,7 +194,7 @@ const verifyEmail = async (req, res) => {
         error: ["The OTP you entered is incorrect"],
       });
     }
-    if (user.otpExpiresAt < Date.now()) {
+    if (user.otpExpiresIn < Date.now()) {
       return res.status(400).json({
         success: false,
         message: "OTP expired",
@@ -205,7 +205,7 @@ const verifyEmail = async (req, res) => {
     // Update user status after successful verification
     user.status = "active";
     user.otp = null;
-    user.otpExpiresAt = null;
+    user.otpExpiresIn = null;
     await user.save();
 
     res.status(200).json({
@@ -263,7 +263,7 @@ const resendOtp = async (req, res) => {
     // Generate new OTP
     const otp = Math.floor(1000 + Math.random() * 9000);
     user.otp = otp;
-    user.otpExpiresAt = Date.now() + 10 * 60 * 1000;
+    user.otpExpiresIn = Date.now() + 10 * 60 * 1000;
     await user.save();
 
     // Send OTP email
@@ -439,7 +439,7 @@ let updateProfile = async (req, res) => {
       "email",
       "role",
       "otp",
-      "otpExpiresAt",
+      "otpExpiresIn",
       "password",
       "createdAt",
       "updatedAt",
@@ -465,7 +465,7 @@ let updateProfile = async (req, res) => {
       "phone",
       "createdAt",
       "updatedAt",
-      "otpExpiresAt",
+      "otpExpiresIn",
     ]);
     if (!user) {
       return res.status(404).json({

@@ -14,6 +14,12 @@ router.get("/", getHostels);
 router.get("/:id", validateId, getHostel);
 router.post("/", verifyToken, addNewHostel);
 router.put("/:id", verifyToken, validateId, updateHostel);
-router.delete("/:id", verifyToken, authorizeRoles("admin", "owner"), validateId, deleteHostel);
+router.delete(
+  "/:id",
+  verifyToken,
+  authorizeRoles("admin", "owner"),
+  validateId,
+  deleteHostel
+);
 
 export default router;

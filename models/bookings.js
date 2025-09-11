@@ -15,11 +15,14 @@ const bookingsSchema = mongoose.Schema(
     roomType: {
       type: mongoose.Schema.Types.ObjectId,
     },
-    price: Number,
     status: {
       type: String,
       enum: ["pending", "confirmed", "cancelled"],
       default: "pending",
+    },
+    totalAmount: {
+      type: Number,
+      required: true,
     },
     paymentMethod: {
       type: String,
@@ -28,26 +31,25 @@ const bookingsSchema = mongoose.Schema(
     },
     fromDate: {
       type: Date,
-      default: Date.now,
+      required: true,
     },
     toDate: {
       type: Date,
-      default: Date.now,
-    },
-    bookingDate: {
-      type: Date,
-      default: Date.now,
+      required: true,
     },
     hostel: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Hostels",
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
+      required: true,
     },
   },
   {
+    timestamps: true,
     toJSON: { virtuals: true, transform: transformBooking },
     toObject: { virtuals: true, transform: transformBooking },
   }
