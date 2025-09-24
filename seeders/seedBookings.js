@@ -6,127 +6,55 @@ const seedBookings = async () => {
     console.log("Bookings already seeded.");
     return;
   }
-  // Example Bookings data
+  // Example Bookings data (4)
   const bookingsData = [
     {
+      // 1
       _id: "687a908aadca98b6494c1899",
-      roomType: "6895cec0f2759ff2d113aec8",
-      price: 12000,
+      roomType: "6895cec0f2759ff2d113aecc", // Cooler
       status: "confirmed",
+      totalAmount: 21000,
       paymentMethod: "cash",
       fromDate: "2025-08-01T00:00:00.000Z",
       toDate: "2025-12-31T00:00:00.000Z",
-      bookingDate: "2025-07-14T11:20:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99be",
-      user: "687a8d8f69d717b002fa06a5",
+      hostel: "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+      user: "687a8d8f69d717b002fa06a3", // Ayesha Siddiqui
     },
     {
+      // 2
       _id: "687a908aadca98b6494c189a",
-      roomType: "6895cec0f2759ff2d113aecf",
-      price: 15000,
+      roomType: "6895cec0f2759ff2d113aeda", // Fan
       status: "pending",
+      totalAmount: 11000,
       paymentMethod: "bank transfer",
       fromDate: "2025-09-01T00:00:00.000Z",
       toDate: "2026-01-31T00:00:00.000Z",
-      bookingDate: "2025-07-10T08:45:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c0",
-      user: "687a8d8f69d717b002fa06a1",
+      hostel: "687a8a22cc7148c1e78a99c4", // Nexus Hostel
+      user: "687a8d8f69d717b002fa06a6", // Bilal Tariq
     },
     {
+      // 3
       _id: "687a908aadca98b6494c189b",
-      roomType: "6895cec0f2759ff2d113aed2",
-      price: 10000,
+      roomType: "6895cec0f2759ff2d113aecc", // Cooler
       status: "confirmed",
+      totalAmount: 21000,
       paymentMethod: "bank transfer",
       fromDate: "2025-07-20T00:00:00.000Z",
       toDate: "2025-11-20T00:00:00.000Z",
-      bookingDate: "2025-07-12T14:00:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c1",
-      user: "687a8d8f69d717b002fa06a7",
+      hostel: "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+      user: "687a8d8f69d717b002fa06a7", // Hina Noor
     },
     {
+      // 4
       _id: "687a908aadca98b6494c189c",
-      roomType: "6895cec0f2759ff2d113aed8",
-      price: 9000,
+      roomType: "6895cec0f2759ff2d113aecf", // Cooler
       status: "cancelled",
+      totalAmount: 17000,
       paymentMethod: "cash",
       fromDate: "2025-08-15T00:00:00.000Z",
       toDate: "2025-12-15T00:00:00.000Z",
-      bookingDate: "2025-07-05T10:10:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c3",
-      user: "687a8d8f69d717b002fa06a8",
-    },
-    {
-      _id: "687a908aadca98b6494c189d",
-      roomType: "6895cec0f2759ff2d113aed6",
-      price: 8500,
-      status: "confirmed",
-      paymentMethod: "cash",
-      fromDate: "2025-09-01T00:00:00.000Z",
-      toDate: "2026-01-31T00:00:00.000Z",
-      bookingDate: "2025-07-01T09:25:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c2",
-      user: "687a8d8f69d717b002fa06a2",
-    },
-    {
-      _id: "687a908aadca98b6494c189e",
-      roomType: "6895cec0f2759ff2d113aed4",
-      price: 7000,
-      status: "confirmed",
-      paymentMethod: "bank transfer",
-      fromDate: "2025-07-25T00:00:00.000Z",
-      toDate: "2025-11-25T00:00:00.000Z",
-      bookingDate: "2025-07-11T16:30:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c2",
-      user: "687a8d8f69d717b002fa06a4",
-    },
-    {
-      _id: "687a908aadca98b6494c189f",
-      roomType: "6895cec0f2759ff2d113aed4",
-      price: 7000,
-      status: "pending",
-      paymentMethod: "cash",
-      fromDate: "2025-08-05T00:00:00.000Z",
-      toDate: "2025-12-05T00:00:00.000Z",
-      bookingDate: "2025-07-13T13:45:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c2",
-      user: "687a8d8f69d717b002fa06a9",
-    },
-    {
-      _id: "687a908aadca98b6494c18a0",
-      roomType: "6895cec0f2759ff2d113aecc",
-      price: 8000,
-      status: "confirmed",
-      paymentMethod: "bank transfer",
-      fromDate: "2025-08-10T00:00:00.000Z",
-      toDate: "2026-02-10T00:00:00.000Z",
-      bookingDate: "2025-07-07T12:00:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99bf",
-      user: "687a8d8f69d717b002fa06a0",
-    },
-    {
-      _id: "687a908aadca98b6494c18a1",
-      roomType: "6895cec0f2759ff2d113aedf",
-      price: 9000,
-      status: "confirmed",
-      paymentMethod: "cash",
-      fromDate: "2025-07-20T00:00:00.000Z",
-      toDate: "2026-01-20T00:00:00.000Z",
-      bookingDate: "2025-07-09T17:15:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c6",
-      user: "687a8d8f69d717b002fa06a3",
-    },
-    {
-      _id: "687a908aadca98b6494c18a2",
-      roomType: "6895cec0f2759ff2d113aeda",
-      price: 11000,
-      status: "confirmed",
-      paymentMethod: "bank transfer",
-      fromDate: "2025-08-01T00:00:00.000Z",
-      toDate: "2026-02-01T00:00:00.000Z",
-      bookingDate: "2025-07-10T08:00:00.000Z",
-      hostel: "687a8a22cc7148c1e78a99c4",
-      user: "687a8d8f69d717b002fa06a6",
+      hostel: "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
+      user: "687a8d8f69d717b002fa06a1", // Ali Raza
     },
   ];
   await Bookings.insertMany(bookingsData);

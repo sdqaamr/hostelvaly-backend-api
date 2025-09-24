@@ -6,127 +6,67 @@ const seedVisitRequests = async () => {
     console.log("Visit Requests already seeded.");
     return;
   }
-  // Example VisitRequests data
+  // Example VisitRequests data (6)
   const visitRequestsData = [
     {
+      // 1
       _id: "687a96e9cb59cdc88e6485f9",
-      fullName: "Zainab Ali",
-      phone: "+923001234567",
-      whatsappUpdates: true,
       visitDate: "2025-07-18T11:00:00.000Z",
-      status: "pending",
-      createdAt: "2025-07-15T13:45:00.000Z",
+      whatsappUpdates: true,
       notes: "Prefer a tour before noon",
-      hostel: "687a8a22cc7148c1e78a99c0",
-      user: "687a8d8f69d717b002fa06a1",
+      status: "pending",
+      hostel: "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
+      user: "687a8d8f69d717b002fa06a1", // Ali Raza
     },
     {
+      // 2
       _id: "687a96e9cb59cdc88e6485fa",
-      fullName: "Ali Raza",
-      phone: "+923336667788",
-      whatsappUpdates: false,
       visitDate: "2025-07-20T14:30:00.000Z",
-      status: "confirmed",
-      createdAt: "2025-07-15T08:30:00.000Z",
+      whatsappUpdates: false,
       notes: "",
-      hostel: "687a8a22cc7148c1e78a99be",
-      user: "687a8d8f69d717b002fa06a0",
+      status: "confirmed",
+      hostel: "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+      user: "687a8d8f69d717b002fa06a3", // Ayesha Siddiqui
     },
     {
+      // 3
       _id: "687a96e9cb59cdc88e6485fb",
-      fullName: "Fatima Khan",
-      phone: "+923338884900",
-      whatsappUpdates: true,
       visitDate: "2025-07-19T10:00:00.000Z",
-      status: "pending",
-      createdAt: "2025-07-15T12:15:00.000Z",
+      whatsappUpdates: true,
       notes: "Will come with parents",
-      hostel: "687a8a22cc7148c1e78a99c2",
-      user: "687a8d8f69d717b002fa06a1",
+      status: "pending",
+      hostel: "687a8a22cc7148c1e78a99c5", // City View Boys Hostel
+      user: "687a8d8f69d717b002fa06a0", // Siddiqa Durrani
     },
     {
+      // 4
       _id: "687a96e9cb59cdc88e6485fc",
-      fullName: "Muhammad Imran",
-      phone: "+923337551234",
-      whatsappUpdates: true,
       visitDate: "2025-07-21T16:00:00.000Z",
-      status: "confirmed",
-      createdAt: "2025-07-14T09:45:00.000Z",
+      whatsappUpdates: true,
       notes: "",
-      hostel: "687a8a22cc7148c1e78a99c3",
-      user: "687a8d8f69d717b002fa06a2",
+      status: "confirmed",
+      hostel: "687a8a22cc7148c1e78a99c2", // Al-Fateh Girls Hostel
+      user: "687a8d8f69d717b002fa06a4", // Zain Abbas
     },
     {
+      // 5
       _id: "687a96e9cb59cdc88e6485fd",
-      fullName: "Sara Ahmed",
-      phone: "+923335667788",
-      whatsappUpdates: false,
       visitDate: "2025-07-18T13:00:00.000Z",
-      status: "pending",
-      createdAt: "2025-07-15T10:00:00.000Z",
+      whatsappUpdates: false,
       notes: "",
-      hostel: "687a8a22cc7148c1e78a99c5",
-      user: null,
+      status: "pending",
+      hostel: "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
+      user: "687a8d8f69d717b002fa06a3", // Ayesha Siddiqui
     },
     {
+      // 6
       _id: "687a96e9cb59cdc88e6485fe",
-      fullName: "Zain Abbas",
-      phone: "+923334556677",
-      whatsappUpdates: true,
       visitDate: "2025-07-22T11:30:00.000Z",
-      status: "cancelled",
-      createdAt: "2025-07-13T07:25:00.000Z",
+      whatsappUpdates: true,
       notes: "Rescheduling due to exam",
-      hostel: "687a8a22cc7148c1e78a99bf",
-      user: "687a8d8f69d717b002fa06a4",
-    },
-    {
-      _id: "687a96e9cb59cdc88e6485ff",
-      fullName: "Hina Noor",
-      phone: "+923332223366",
-      whatsappUpdates: true,
-      visitDate: "2025-07-19T17:00:00.000Z",
-      status: "confirmed",
-      createdAt: "2025-07-15T11:10:00.000Z",
-      notes: "Please confirm before 16th",
-      hostel: "687a8a22cc7148c1e78a99c1",
-      user: "687a8d8f69d717b002fa06a7",
-    },
-    {
-      _id: "687a96e9cb59cdc88e648600",
-      fullName: "Usman Shah",
-      phone: "+923330007788",
-      whatsappUpdates: false,
-      visitDate: "2025-07-18T15:45:00.000Z",
-      status: "pending",
-      createdAt: "2025-07-14T13:15:00.000Z",
-      notes: "",
-      hostel: "687a8a22cc7148c1e78a99c3",
-      user: "687a8d8f69d717b002fa06a8",
-    },
-    {
-      _id: "687a96e9cb59cdc88e648601",
-      fullName: "Maryam Iqbal",
-      phone: "+923338881122",
-      whatsappUpdates: true,
-      visitDate: "2025-07-20T12:00:00.000Z",
-      status: "pending",
-      createdAt: "2025-07-15T15:30:00.000Z",
-      notes: "Need to discuss mess timing",
-      hostel: "687a8a22cc7148c1e78a99c2",
-      user: "687a8d8f69d717b002fa06a9",
-    },
-    {
-      _id: "687a96e9cb59cdc88e648602",
-      fullName: "Hamza Shahid",
-      phone: "+923334440022",
-      whatsappUpdates: false,
-      visitDate: "2025-07-19T10:30:00.000Z",
-      status: "confirmed",
-      createdAt: "2025-07-14T18:20:00.000Z",
-      notes: "",
-      hostel: "687a8a22cc7148c1e78a99c6",
-      user: null,
+      status: "cancelled",
+      hostel: "687a8a22cc7148c1e78a99be", // Al-Madina Boys Hostel
+      user: "687a8d8f69d717b002fa06a1", // Ali Raza
     },
   ];
   await VisitRequests.insertMany(visitRequestsData);

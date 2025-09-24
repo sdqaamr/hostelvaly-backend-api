@@ -6,7 +6,7 @@ const seedUsers = async () => {
     console.log("Users already seeded.");
     return;
   }
-  // Example Users data
+  // Example Users data (8)
   const usersData = [
     {
       // 1
@@ -14,15 +14,27 @@ const seedUsers = async () => {
       fullName: "Siddiqa Durrani",
       email: "siddiqadurrani@gmail.com",
       role: "admin",
-      otp: null,
-      otpExpiresIn: null,
       password: "$2b$10$5DwNKZfpLg25.ttRsASjnuTjDwU9V0lXQs.VS7xxSBRkmaHlZdyla", // pswdsiddiqa
       profilePicture: "https://example.com/profile/siddiqa_durrani.jpg",
       phone: "+923338884900",
       city: "Multan",
       gender: "female",
+      otp: null,
+      otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99c0", "687a8a22cc7148c1e78a99c4"],
+      favorites: [
+        "687a8a22cc7148c1e78a99c1", // Comfort Hostel
+        "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+      ],
+      hostelsOwned: [
+        "687a8a22cc7148c1e78a99c1", // Comfort Hostel
+        "687a8a22cc7148c1e78a99c5", // City View Boys Hostel
+      ],
+      visitRequests: ["687a96e9cb59cdc88e6485fb"], // 3
+      reviewsPosted: [
+        "687a9af9880e74a450aef54a", // 9
+        "687a9af9880e74a450aef54c", // 11
+      ],
     },
     {
       // 2
@@ -30,16 +42,28 @@ const seedUsers = async () => {
       fullName: "Ali Raza",
       email: "ali.raza@gmail.com",
       role: "owner",
-      otp: null,
-      otpExpiresIn: null,
       password: "$2b$10$p7hAxJlIOf5gZRCKPc0iQ.uLHQYCAKFaioGt/HHq2AjvzYAAstwpS", // pswdraza
       profilePicture: "https://example.com/profile/ali_raza.jpg",
       phone: "+923336667788",
       city: "Lahore",
       gender: "male",
+      otp: null,
+      otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99bf", "687a8a22cc7148c1e78a99c2"],
-      hostels: ["687a8a22cc7148c1e78a99be"],
+      favorites: [
+        "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+        "687a8a22cc7148c1e78a99c2", // Al-Fateh Girls Hostel
+      ],
+      hostelsOwned: [
+        "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+        "687a8a22cc7148c1e78a99c2", // Al-Fateh Girls Hostel
+      ],
+      bookings: "687a908aadca98b6494c189c", // 4
+      visitRequests: [
+        "687a96e9cb59cdc88e6485f9", // 1
+        "687a96e9cb59cdc88e6485fe", // 6
+      ],
+      reviewsPosted: ["687a9af9880e74a450aef542"], // 1
     },
     {
       // 3
@@ -47,48 +71,78 @@ const seedUsers = async () => {
       fullName: "Muhammad Imran",
       email: "imran.uet@gmail.com",
       role: "student",
-      otp: "4321",
-      otpExpiresIn: "2025-02-17T15:20:00.000Z",
       password: "$2b$10$RErto8RkzEZr1wiL0.n9/OjmlW8P2JyCYV4ozDP/oMlZq.UsULG.e", // pswdimran
       profilePicture: "https://example.com/profile/muhammad_imran.jpg",
       phone: "+923337551234",
       city: "Peshawar",
       gender: "male",
-      status: "inactive",
-      favorites: ["687a8a22cc7148c1e78a99c3"],
+      otp: null,
+      otpExpiresIn: null,
+      status: "banned",
+      favorites: ["687a8a22cc7148c1e78a99be"], // Al-Madina Boys Hostel
+      hostelsOwned: [],
+      visitRequests: [],
+      reviewsPosted: [
+        "687a9af9880e74a450aef545", // 4
+        "687a9af9880e74a450aef547", // 6
+        "687a9af9880e74a450aef544", // 3
+      ],
     },
     {
       // 4
       _id: "687a8d8f69d717b002fa06a3",
       fullName: "Ayesha Siddiqui",
       email: "ayesha.s@gmail.com",
-      role: "owner",
-      otp: null,
-      otpExpiresIn: null,
+      role: "student",
       password: "$2b$10$ZXPH0uiE.fsOBogmd2Jf5.GEYZ.nUYZdSeJo5fqZYNIq1rkrsWuN6", // pswdayesha
       profilePicture: "https://example.com/profile/ayesha_siddiqui.jpg",
       phone: "+923331119988",
       city: "Karachi",
       gender: "female",
+      otp: null,
+      otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99be"],
-      hostels: ["687a8a22cc7148c1e78a99c1", "687a8a22cc7148c1e78a99c6"],
+      favorites: [
+        "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
+        "687a8a22cc7148c1e78a99c3", // Rahat Hostel
+        "687a8a22cc7148c1e78a99c4", // Nexus Hostel
+      ],
+      hostelsOwned: [],
+      bookings: "687a908aadca98b6494c1899", // 1
+      visitRequests: [
+        "687a96e9cb59cdc88e6485fa", // 2
+        "687a96e9cb59cdc88e6485fd", // 5
+      ],
+      reviewsPosted: ["687a9af9880e74a450aef549"], // 8
     },
     {
       // 5
       _id: "687a8d8f69d717b002fa06a4",
       fullName: "Zain Abbas",
       email: "zain.abbas@yahoo.com",
-      role: "student",
-      otp: null,
-      otpExpiresIn: null,
+      role: "owner",
       password: "$2b$10$m85jByMht8abcJMQQS8p8us9Wn9PvXMXlQ5fE65ld4m6QG5NcuxdO", // pswdzain
       profilePicture: "https://example.com/profile/zain_abbas.jpg",
       phone: "+923334556677",
       city: "Faisalabad",
       gender: "male",
+      otp: null,
+      otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99c2"],
+      favorites: ["687a8a22cc7148c1e78a99be", // Al-Madina Boys Hostel
+        "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
+        "687a8a22cc7148c1e78a99c4", // Nexus Hostel
+      ],
+      hostelsOwned: [
+        "687a8a22cc7148c1e78a99be", // Al-Madina Boys Hostel
+        "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
+        "687a8a22cc7148c1e78a99c4", // Nexus Hostel
+      ],
+      visitRequests: ["687a96e9cb59cdc88e6485fc"], // 4
+      reviewsPosted: [
+        "687a9af9880e74a450aef543", // 2
+        "687a9af9880e74a450aef546", // 5
+      ],
     },
     {
       // 6
@@ -96,32 +150,41 @@ const seedUsers = async () => {
       fullName: "Sara Ahmed",
       email: "sara.ahmed@gmail.com",
       role: "student",
-      otp: null,
-      otpExpiresIn: null,
       password: "$2b$10$aN/aS3hy3kfvy4.u7oqZRO9FZjFQgIL.88oBT3nuDqB0EUKYCvYvu", // pswdsara
       profilePicture: "https://example.com/profile/sara_ahmed.jpg",
       phone: "+923335667788",
       city: "Lahore",
       gender: "female",
-      status: "active",
-      favorites: ["687a8a22cc7148c1e78a99be", "687a8a22cc7148c1e78a99c5"],
+      otp: "4321",
+      otpExpiresIn: "2025-04-30T14:05:00.000Z",
+      status: "inactive",
+      favorites: [],
+      hostelsOwned: [],
+      visitRequests: [],
+      reviewsPosted: [
+        "687a9af9880e74a450aef548", // 7
+        "687a9af9880e74a450aef54d", // 12
+      ],
     },
     {
       // 7
       _id: "687a8d8f69d717b002fa06a6",
       fullName: "Bilal Tariq",
       email: "bilal.tariq@outlook.com",
-      role: "owner",
-      otp: null,
-      otpExpiresIn: null,
+      role: "student",
       password: "$2b$10$qoEZgwoVto.JD/EiLnHyRO7ZUAkfZKUpQ.2Wfz6XcRfbWcXBCG7h2", // pswdbilal
       profilePicture: "https://example.com/profile/bilal_tariq.jpg",
       phone: "+923339994433",
       city: "Islamabad",
       gender: "male",
+      otp: null,
+      otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99bf"],
-      hostels: ["687a8a22cc7148c1e78a99c0", "687a8a22cc7148c1e78a99c4"],
+      favorites: [],
+      hostelsOwned: ["687a8a22cc7148c1e78a99c0", "687a8a22cc7148c1e78a99c4"],
+      bookings: "687a908aadca98b6494c189a", // 2
+      visitRequests: [],
+      reviewsPosted: [],
     },
     {
       // 8
@@ -129,46 +192,23 @@ const seedUsers = async () => {
       fullName: "Hina Noor",
       email: "hina.noor@gmail.com",
       role: "student",
-      otp: null,
-      otpExpiresIn: null,
       password: "$2b$10$iOyVVNaJcBy5aQB3dt81UOhckvkDBDmtmORsktYlOAAvV.pzQH7am", // pswdhina
       profilePicture: "https://example.com/profile/hina_noor.jpg",
       phone: "+923332223366",
       city: "Karachi",
       gender: "female",
-      status: "active",
-      favorites: ["687a8a22cc7148c1e78a99c1", "687a8a22cc7148c1e78a99c6"],
-    },
-    {
-      // 9
-      _id: "687a8d8f69d717b002fa06a8",
-      fullName: "Usman Shah",
-      email: "usman.shah@gmail.com",
-      role: "student",
-      otp: "4321",
-      otpExpiresIn: "2025-04-30T14:05:00.000Z",
-      password: "$2b$10$LaA8AWZsv1oP7ss0m4AeieAR6CGO7vm8INzDSzPJYHeBwFq7.68CW", // pswdusman
-      profilePicture: "https://example.com/profile/usman_shah.jpg",
-      phone: "+923330007788",
-      city: "Peshawar",
-      gender: "male",
-      status: "banned",
-    },
-    {
-      // 10
-      _id: "687a8d8f69d717b002fa06a9",
-      fullName: "Maryam Iqbal",
-      email: "maryam.iqbal@yahoo.com",
-      role: "student",
       otp: null,
       otpExpiresIn: null,
-      password: "$2b$10$FkCoL6cedp3CrPhQgpR4lufi5l0MMs6Zw2G8b3yND15DQkA2yAeoO", // pswdmaryam
-      profilePicture: "https://example.com/profile/maryam_iqbal.jpg",
-      phone: "+923338881122",
-      city: "Faisalabad",
-      gender: "female",
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99c2"],
+      favorites: [],
+      hostelsOwned: [],
+      bookings: "687a908aadca98b6494c189b", // 3
+      visitRequests: [
+        "687a96e9cb59cdc88e6485fb", // 3
+        "687a96e9cb59cdc88e6485f9", // 1
+        "687a96e9cb59cdc88e6485fe", // 6
+      ],
+      reviewsPosted: ["687a9af9880e74a450aef54b"], // 10
     },
   ];
   await Users.insertMany(usersData);

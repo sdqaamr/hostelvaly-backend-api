@@ -12,7 +12,7 @@ const roomTypeSchema = new mongoose.Schema({
     required: true,
     trim: true,
     minlength: 10,
-    maxlength: 30,
+    maxlength: 200,
   },
   monthlyRent: {
     type: Number,
@@ -40,7 +40,7 @@ const hostelsSchema = mongoose.Schema(
       required: true,
       trim: true,
       minlength: 2,
-      maxlength: 20,
+      maxlength: 80,
     },
     amenities: [
       {
@@ -48,14 +48,14 @@ const hostelsSchema = mongoose.Schema(
         trim: true,
       },
     ],
-    roomTypes: [roomTypeSchema],
+    roomType: [roomTypeSchema],
     images: [String],
     description: {
       type: String,
       required: true,
       trim: true,
       minlength: 10,
-      maxlength: 80,
+      maxlength: 500,
     },
     securityCharges: {
       type: Number,
@@ -65,10 +65,12 @@ const hostelsSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    reviews: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Reviews",
-    },
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Reviews",
+      },
+    ],
     rating: Number,
     reviewsCount: Number,
     owner: {
@@ -76,14 +78,18 @@ const hostelsSchema = mongoose.Schema(
       ref: "Users",
       required: true,
     },
-    bookings: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Bookings",
-    },
-    visitRequests: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "VisitRequests",
-    },
+    bookings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Bookings",
+      },
+    ],
+    visitRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "VisitRequests",
+      },
+    ],
   },
   { timestamps: true }
 );

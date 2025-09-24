@@ -32,36 +32,7 @@ const usersSchema = mongoose.Schema(
       type: String,
       default: "placeholder.png",
     },
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-      set: (v) => {
-        if (!v) return v;
-
-        // Remove everything except digits and "+"
-        let sanitized = v.replace(/[^\d+]/g, "");
-
-        // Ensure it starts with "+"
-        if (!sanitized.startsWith("+")) {
-          sanitized = "+" + sanitized.replace(/\+/g, ""); // strip any extra "+"
-        }
-
-        // Enforce strict E.164: first digit after "+" must NOT be "0"
-        if (/^\+0/.test(sanitized)) {
-          throw new Error(
-            "Invalid phone number: country code cannot start with 0"
-          );
-        }
-
-        return sanitized;
-      },
-      validate: {
-        validator: (v) => /^\+[1-9]\d{1,14}$/.test(v), // strict E.164
-        message: (props) => `${props.value} is not a valid E.164 phone number!`,
-      },
-    },
-
+    phone: String,
     city: {
       type: String,
       required: true,
@@ -97,12 +68,10 @@ const usersSchema = mongoose.Schema(
         ref: "Hostels",
       },
     ],
-    bookings: [
-      {
+    bookings: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Bookings",
       },
-    ],
     visitRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
