@@ -29,12 +29,7 @@ const verifyToken = (req, res, next) => {
       }
     );
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 

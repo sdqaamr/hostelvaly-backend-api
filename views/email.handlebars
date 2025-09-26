@@ -1,387 +1,227 @@
-<html
-  xmlns:v="urn:schemas-microsoft-com:vml"
-  xmlns:o="urn:schemas-microsoft-com:office:office"
-  lang="en"
->
-
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Cabin"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <meta charset="utf-8" />
+    <!-- Prevent iOS from auto-scaling the email -->
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome – Your OTP Code</title>
+    <!--[if mso]>
+      <style type="text/css">
+        body, table, td, a { font-family: Arial, sans-serif !important; }
+      </style>
+    <![endif]-->
     <style>
-      * { box-sizing: border-box; } body { margin: 0; padding: 0; }
-      a[x-apple-data-detectors] { color: inherit !important; text-decoration:
-      inherit !important; } #MessageViewBody a { color: inherit;
-      text-decoration: none; } p { line-height: inherit } .desktop_hide,
-      .desktop_hide table { mso-hide: all; display: none; max-height: 0px;
-      overflow: hidden; } .image_block img+div { display: none; } sup, sub {
-      font-size: 75%; line-height: 0; } @media (max-width:670px) { .desktop_hide
-      table.icons-inner, .social_block.desktop_hide .social-table { display:
-      inline-block !important; } .icons-inner { text-align: center; }
-      .icons-inner td { margin: 0 auto; } .image_block div.fullWidth {
-      max-width: 100% !important; } .mobile_hide { display: none; } .row-content
-      { width: 100% !important; } .stack .column { width: 100%; display: block;
-      } .mobile_hide { min-height: 0; max-height: 0; max-width: 0; overflow:
-      hidden; font-size: 0px; } .desktop_hide, .desktop_hide table { display:
-      table !important; max-height: none !important; } }
+      /* Mobile tweaks (limited support, but safe) */ @media screen and
+      (max-width: 600px) { .container { width: 100% !important; } .p-sm-24 {
+      padding: 24px !important; } .otp { font-size: 24px !important;
+      letter-spacing: 6px !important; } .h1 { font-size: 24px !important; } }
     </style>
   </head>
+  <body style="margin:0;padding:0;background-color:#f4f6f8;">
+    <!-- Preheader (hidden preview text in inbox) -->
+    <div
+      style="display:none;font-size:1px;color:#f4f6f8;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;"
+    >
+      Your OTP is
+      {{OTP_CODE}}. It expires in
+      {{OTP_TTL_MINUTES}}
+      minutes.
+    </div>
 
-  <body
-    class="body"
-    style="background-color: #000000; margin: 0; padding: 0; -webkit-text-size-adjust: none; text-size-adjust: none;"
-  >
+    <!-- Full width wrapper -->
     <table
-      class="nl-container"
-      width="100%"
-      border="0"
+      role="presentation"
       cellpadding="0"
       cellspacing="0"
-      role="presentation"
-      style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #000000;"
+      width="100%"
+      style="background-color:#f4f6f8;"
     >
-      <tbody>
-        <tr>
-          <td>
-            <table
-              class="row row-1"
-              align="center"
-              width="100%"
-              border="0"
-              cellpadding="0"
-              cellspacing="0"
-              role="presentation"
-              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f3e6f8;"
-            >
-              <tbody>
-                <tr>
-                  <td>
-                    <table
-                      class="row-content stack"
-                      align="center"
-                      border="0"
-                      cellpadding="0"
-                      cellspacing="0"
-                      role="presentation"
-                      style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; color: #000000; width: 650px; margin: 0 auto;"
-                      width="650"
-                    >
-                      <tbody>
-                        <tr>
-                          <td
-                            class="column column-1"
-                            width="100%"
-                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-bottom: 5px; padding-top: 5px; vertical-align: top;"
-                          >
-                            <table
-                              class="image_block block-1"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="padding-bottom:15px;padding-top:15px;width:100%;padding-right:0px;padding-left:0px;"
-                                >
-                                  <div class="alignment" align="center">
-                                    <div style="max-width: 195px;">
-                                      <h1
-                                        style="color:#8100d1;font-style:italic"
-                                      >HostelValy</h1>
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table
-              class="row row-2"
-              align="center"
-              width="100%"
-              border="0"
-              cellpadding="0"
-              cellspacing="0"
-              role="presentation"
-              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f3e6f8;"
-            >
-              <tbody>
-                <tr>
-                  <td>
-                    <table
-                      class="row-content stack"
-                      align="center"
-                      border="0"
-                      cellpadding="0"
-                      cellspacing="0"
-                      role="presentation"
-                      style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #ffffff; background-image: url('https://d1oco4z2z1fhwp.cloudfront.net/templates/default/2971/ResetPassword_BG_2.png'); background-position: center top; background-repeat: no-repeat; color: #000000; width: 650px; margin: 0 auto;"
-                      width="650"
-                    >
-                      <tbody>
-                        <tr>
-                          <td
-                            class="column column-1"
-                            width="100%"
-                            style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; padding-top: 45px; vertical-align: top;"
-                          >
-                            <table
-                              class="divider_block block-1"
-                              width="100%"
-                              border="0"
-                              cellpadding="20"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div class="alignment" align="center">
-                                    <table
-                                      border="0"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      role="presentation"
-                                      width="100%"
-                                      style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                                    >
-                                      <tr>
-                                        <td
-                                          class="divider_inner"
-                                          style="font-size: 1px; line-height: 1px; border-top: 0px solid #BBBBBB;"
-                                        ><span
-                                            style="word-break: break-word;"
-                                          >&#8202;</span></td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="image_block block-2"
-                              width="100%"
-                              border="0"
-                              cellpadding="20"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div class="alignment" align="center">
-                                    <div
-                                      class="fullWidth"
-                                      style="max-width: 357.5px;"
-                                    ><img
-                                        src="https://d1oco4z2z1fhwp.cloudfront.net/templates/default/2971/lock5.png"
-                                        style="display: block; height: auto; border: 0; width: 100%;"
-                                        width="357.5"
-                                        alt="OTP Code to Verify Your Email"
-                                        title="OTP Code to Verify Your Email"
-                                        height="auto"
-                                      /></div>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="heading_block block-3"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="padding-top:35px;text-align:center;width:100%;"
-                                >
-                                  <h1
-                                    style="margin: 0; color: #8412c0; direction: ltr; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 28px; font-weight: 400; letter-spacing: normal; line-height: 1.2; text-align: center; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 34px;"
-                                  ><strong>OTP Code to Verify Your Email</strong></h1>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="paragraph_block block-4"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="padding-left:45px;padding-right:45px;padding-top:10px;"
-                                >
-                                  <div
-                                    style="color:#393d47;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:18px;line-height:1.5;text-align:center;mso-line-height-alt:27px;"
-                                  >
-                                    <p
-                                      style="margin: 0; word-break: break-word;"
-                                    ><span
-                                        style="word-break: break-word; color: #aa67cf;"
-                                      >Dont share your OTP with anyone.</span></p>
-                                    <p
-                                      style="margin: 0; word-break: break-word;"
-                                    ><span
-                                        style="word-break: break-word; color: #aa67cf;"
-                                      >This code will expire in
-                                        <b>10 minutes</b></span></p>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="divider_block block-5"
-                              width="100%"
-                              border="0"
-                              cellpadding="20"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div class="alignment" align="center">
-                                    <table
-                                      border="0"
-                                      cellpadding="0"
-                                      cellspacing="0"
-                                      role="presentation"
-                                      width="80%"
-                                      style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                                    >
-                                      <tr>
-                                        <td
-                                          class="divider_inner"
-                                          style="font-size: 1px; line-height: 1px; border-top: 1px solid #E1B4FC;"
-                                        ><span
-                                            style="word-break: break-word;"
-                                          >&#8202;</span></td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="paragraph_block block-6"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="padding-bottom:10px;padding-left:45px;padding-right:45px;padding-top:10px;"
-                                >
-                                  <div
-                                    style="color:#393d47;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:13px;line-height:1.5;text-align:left;mso-line-height-alt:20px;"
-                                  >
-                                    <p
-                                      style="margin: 0; word-break: break-word;"
-                                    ><span
-                                        style="word-break: break-word; color: #8412c0;"
-                                      >Your verification code is:</span></p>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="button_block block-7"
-                              width="100%"
-                              border="0"
-                              cellpadding="10"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
-                            >
-                              <tr>
-                                <td class="pad">
-                                  <div class="alignment" align="center"><a
-                                      href="#"
-                                      target="_blank"
-                                      style="color:#ffffff;text-decoration:none;"
-                                    ><span
-                                        class="button"
-                                        style="background-color: #8412c0; border-bottom: 1px solid transparent; border-left: 1px solid transparent; border-radius: 8px; border-right: 1px solid transparent; border-top: 1px solid transparent; color: #ffffff; display: inline-block; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 18px; font-weight: 400; mso-border-alt: none; padding-bottom: 10px; padding-top: 10px; padding-left: 40px; padding-right: 40px; text-align: center; width: auto; word-break: keep-all; letter-spacing: normal;"
-                                      ><span
-                                          style="word-break: break-word;"
-                                        ><span
-                                            style="word-break: break-word; line-height: 28px;"
-                                            data-mce-style
-                                          >{{otp}}</span></span></span></a></div>
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              class="paragraph_block block-8"
-                              width="100%"
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              role="presentation"
-                              style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; word-break: break-word;"
-                            >
-                              <tr>
-                                <td
-                                  class="pad"
-                                  style="padding-bottom:15px;padding-left:10px;padding-right:10px;padding-top:10px;"
-                                >
-                                  <div
-                                    style="color:#393d47;font-family:'Cabin',Arial,'Helvetica Neue',Helvetica,sans-serif;font-size:10px;line-height:1.2;text-align:center;mso-line-height-alt:12px;"
-                                  >
-                                    <p
-                                      style="margin: 0; word-break: break-word;"
-                                    ><span
-                                        style="word-break: break-word; color: #aa67cf;"
-                                      ><span style="word-break: break-word;">If
-                                          If you didn't make this request,
-                                        </span><span
-                                          style="word-break: break-word;"
-                                        >you don't have to do anything. Simply
-                                          ignore.</span></span></p>
-                                  </div>
-                                </td>
-                              </tr>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <h2 style="margin-bottom:50:">.</h2>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table><!-- End -->
-  </body>
+      <tr>
+        <td align="center" style="padding:32px 16px;">
+          <!-- Card -->
+          <table
+            role="presentation"
+            cellpadding="0"
+            cellspacing="0"
+            width="600"
+            class="container"
+            style="width:600px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6eaef;"
+          >
+            <!-- Header / Brand -->
+            <tr>
+              <td
+                align="center"
+                style="padding:24px 24px;border-bottom:1px solid #eef2f7;background:#8100d1;"
+              >
+                <!-- Logo (optional) -->
+                <!-- <img src="https://yourcdn.com/logo.png" alt="Company" width="120" style="display:block;border:0;outline:none;text-decoration:none;"> -->
+                <div
+                  style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#ecfeff;letter-spacing:.4px;text-transform:uppercase;"
+                >
+                  {{APP_NAME}}
+                </div>
+                <div
+                  style="height:8px;line-height:8px;font-size:8px;"
+                >&nbsp;</div>
+                <div
+                  class="h1"
+                  style="font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:28px;line-height:1.2;color:#ffffff;"
+                >
+                  Welcome to
+                  {{APP_NAME}}
+                  👋
+                </div>
+              </td>
+            </tr>
 
+            <!-- Body -->
+            <tr>
+              <td class="p-sm-24" style="padding:32px 40px 8px 40px;">
+                <p
+                  style="margin:0 0 12px 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#0f172a;"
+                >
+                  Hi
+                  {{USER_NAME}},
+                </p>
+                <p
+                  style="margin:0 0 16px 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#334155;"
+                >
+                  Thanks for signing up! Use the One-Time Password (OTP) below
+                  to verify your email address and complete your registration.
+                </p>
+
+                <!-- OTP Box -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="margin:16px 0 8px 0;"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      style="background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:10px;padding:20px;"
+                    >
+                      <div
+                        class="otp"
+                        style="font-family:'Courier New',Consolas,monospace;font-weight:700;font-size:28px;letter-spacing:8px;color:#0f172a;"
+                      >
+                        {{OTP_CODE}}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+
+                <p
+                  style="margin:8px 0 16px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#64748b;"
+                >
+                  This code expires in
+                  <strong style="color:#0f172a;">{{OTP_TTL_MINUTES}}
+                    minutes</strong>. If you didn’t request this, you can ignore
+                  this email.
+                </p>
+
+                <!-- CTA Button (bulletproof) -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="margin:20px 0 12px 0;"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      bgcolor="#8100d1"
+                      style="border-radius:8px;"
+                    >
+                      <a
+                        href="{{VERIFY_URL}}"
+                        target="_blank"
+                        style="display:inline-block;padding:12px 22px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;color:#ffffff;text-decoration:none;border-radius:8px;"
+                      >
+                        Verify Email
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Fallback link -->
+                <p
+                  style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#94a3b8;"
+                >
+                  Button not working? Paste this URL into your browser:<br />
+                  <a
+                    href="{{VERIFY_URL}}"
+                    style="color:#0ea5e9;text-decoration:underline;word-break:break-all;"
+                  >{{VERIFY_URL}}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td style="padding:0 40px;">
+                <hr
+                  style="border:none;border-top:1px solid #eef2f7;margin:24px 0;"
+                />
+              </td>
+            </tr>
+
+            <!-- Help / Security tips -->
+            <tr>
+              <td class="p-sm-24" style="padding:0 40px 24px 40px;">
+                <p
+                  style="margin:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#334155;"
+                >
+                  Security tip
+                </p>
+                <p
+                  style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#64748b;"
+                >
+                  We’ll never ask you to share your OTP with anyone. If you
+                  suspect suspicious activity, please contact support at
+                  <a
+                    href="mailto:{{SUPPORT_EMAIL}}"
+                    style="color:#0ea5e9;text-decoration:underline;"
+                  >{{SUPPORT_EMAIL}}</a>.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="padding:20px 24px;background:#ffffff;border-top:1px solid #eef2f7;"
+              >
+                <p
+                  style="margin:0 0 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#94a3b8;"
+                >
+                  ©
+                  {{CURRENT_YEAR}}
+                  {{APP_NAME}}. All rights reserved.
+                </p>
+                <p
+                  style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#94a3b8;"
+                >
+                  You received this email because you created an account at
+                  {{APP_NAME}}. If this wasn’t you, you can safely ignore this
+                  message.
+                </p>
+                <!-- Optional unsubscribe/ address block for compliance -->
+                <!--
+                <p style="margin:8px 0 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#94a3b8;">
+                  {{COMPANY_ADDRESS}} • <a href="{{UNSUBSCRIBE_URL}}" style="color:#94a3b8;text-decoration:underline;">Unsubscribe</a>
+                </p>
+                -->
+              </td>
+            </tr>
+
+          </table>
+          <!-- /Card -->
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>

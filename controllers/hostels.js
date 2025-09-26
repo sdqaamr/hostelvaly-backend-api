@@ -1,6 +1,6 @@
 import { Hostels } from "../models/hostels.js";
 
-const getHostels = async (req, res) => {
+const getHostels = async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, parseInt(req.query.limit) || 5);
@@ -44,16 +44,11 @@ const getHostels = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-const getHostel = async (req, res) => {
+const getHostel = async (req, res, next) => {
   try {
     const { id } = req.params;
     const hostel = await Hostels.findById(id).populate("owner", ["fullName"]);
@@ -72,16 +67,11 @@ const getHostel = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-const addNewHostel = async (req, res) => {
+const addNewHostel = async (req, res, next) => {
   try {
     const { name = "", city = "", isAvailable = false } = req.body;
     const validationErrors = [];
@@ -113,16 +103,11 @@ const addNewHostel = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-const updateHostel = async (req, res) => {
+const updateHostel = async (req, res, next) => {
   try {
     const { id } = req.params;
     const hostelData = req.body;
@@ -155,16 +140,11 @@ const updateHostel = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-const deleteHostel = async (req, res) => {
+const deleteHostel = async (req, res, next) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -184,12 +164,7 @@ const deleteHostel = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 

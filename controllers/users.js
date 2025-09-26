@@ -3,28 +3,50 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/send-mail.js";
 
-let getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
-    const users = await Users.find()
-      .select(["fullName", "email", "role", "city", "hostels", "favorites"])
-      .populate(["favorites", "hostels"]);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 5);
+    const skip = (page - 1) * limit;
+
+    const [total, users] = await Promise.all([
+      Users.countDocuments(),
+      Users.find()
+        .skip(skip)
+        .limit(limit)
+        .select([
+          "fullName",
+          "email",
+          "role",
+          "phone",
+          "city",
+          "favorites",
+          "hostelsOwned",
+          "bookings",
+        ])
+        .populate("favorites", ["name"])
+        .populate("hostelsOwned", ["name"])
+        .populate("bookings", ["hostel", "fromDate", "toDate"]),
+    ]);
+
     res.status(200).json({
       success: true,
       message: "Data fetched successfully",
       data: users,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-let getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
   try {
     let id = req.user.id;
     const user = await Users.findById(id)
@@ -32,56 +54,42 @@ let getProfile = async (req, res) => {
         "fullName",
         "email",
         "role",
-        "city",
-        "hostels",
-        "favorites",
-        "profilePicture",
-        "status",
         "phone",
-        "createdAt",
-        "otp",
-        "otpExpiresIn",
+        "city",
+        "favorites",
+        "hostelsOwned",
+        "bookings",
+        "visitRequests",
+        "reviewsPosted",
       ])
-      .populate(["favorites", "hostels"]);
+      .populate("favorites", ["name"])
+      .populate("hostelsOwned", ["name"])
+      .populate("bookings", ["hostel", "fromDate", "toDate"])
+      .populate("visitRequests", ["hostel", "visitDate"])
+      .populate("reviewsPosted", ["comment", "hostel"]);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
         data: null,
-        error: null, //execution is successfull
+        error: ["No user exists with the given ID"],
       });
     }
     res.status(200).json({
       success: true,
       id: id,
-      message: "User data by ID is fetched successfully",
-      data: {
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-        status: user.status,
-        profilePicture: user.profilePicture,
-        city: user.city,
-        phone: user.phone,
-        otpExpiresIn: user.otpExpiresIn,
-      },
+      message: "User data is fetched successfully",
+      data: user,
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-let signupUser = async (req, res) => {
+const register = async (req, res, next) => {
   try {
-    let { fullName, email, password, confirmPassword, role } = req.body;
+    let { fullName, email, password, confirmPassword } = req.body;
     let validationErrors = [];
     if (!fullName) {
       validationErrors.push("Full name is required");
@@ -117,17 +125,22 @@ let signupUser = async (req, res) => {
     }
     const hash = await bcrypt.hash(password, 10);
     const otp = Math.floor(1000 + Math.random() * 9000);
-    const otpExpiresIn = Date.now() + 10 * 60 * 1000;
+    const otpTTLMinutes = parseInt(process.env.OTP_TTL_MINUTES, 10) || 10;
+    const otpExpiresIn = Date.now() + otpTTLMinutes * 60 * 1000;
     const user = new Users({
       fullName,
       email,
       password: hash,
-      role,
       otp,
       otpExpiresIn,
     });
     await user.save();
-    sendEmail(email, "Verify your email", String(otp));
+    sendEmail(email, "Verify your email", {
+      otp,
+      otpExpiresIn,
+      otpTTLMinutes,
+      fullName,
+    });
     res.status(201).json({
       success: true,
       message: "User created successfully",
@@ -136,29 +149,19 @@ let signupUser = async (req, res) => {
         email: user.email,
         role: user.role,
         profilePicture: user.profilePicture,
-        phone: user.phone,
-        city: user.city,
-        gender: user.gender,
-        createdAt: user.createdAt,
-        status: user.status,
         otpExpiresIn: user.otpExpiresIn,
-        favorites: user.favorites,
-        hostels: user.hostels,
+        status: user.status,
+        createdAt: user.createdAt,
       },
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
 // Verify Email with OTP
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
     let errors = [];
@@ -182,7 +185,7 @@ const verifyEmail = async (req, res) => {
         success: false,
         message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given email"],
       });
     }
     // Check OTP validity
@@ -220,17 +223,12 @@ const verifyEmail = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
 // Resend OTP
-const resendOtp = async (req, res) => {
+const resendOtp = async (req, res, next) => {
   try {
     const { email } = req.body;
     if (!email) {
@@ -262,12 +260,18 @@ const resendOtp = async (req, res) => {
     }
     // Generate new OTP
     const otp = Math.floor(1000 + Math.random() * 9000);
+    const otpTTLMinutes = parseInt(process.env.OTP_TTL_MINUTES, 10) || 10;
     user.otp = otp;
-    user.otpExpiresIn = Date.now() + 10 * 60 * 1000;
+    user.otpExpiresIn = Date.now() + otpTTLMinutes * 60 * 1000;
     await user.save();
 
     // Send OTP email
-    await sendEmail(user.email, "Resend OTP - Verify your email", String(otp));
+    await sendEmail(user.email, "Resend OTP - Verify your email", {
+      otp,
+      otpExpiresIn: user.otpExpiresIn,
+      otpTTLMinutes,
+      fullName: user.fullName,
+    });
     console.log("📧 Resending OTP:", otp, "to", user.email);
     res.status(200).json({
       success: true,
@@ -276,22 +280,19 @@ const resendOtp = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-let loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
   try {
     let { email, password } = req.body;
-    const user = await Users.findOne({ email: email }).populate([
-      "favorites",
-      "hostels",
-    ]);
+    const user = await Users.findOne({ email: email })
+      .populate("favorites", ["name"])
+      .populate("hostelsOwned", ["name"])
+      .populate("bookings", ["hostel", "fromDate", "toDate"])
+      .populate("visitRequests", ["hostel", "visitDate"])
+      .populate("reviewsPosted", ["comment", "hostel"]);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -337,28 +338,26 @@ let loginUser = async (req, res) => {
           email: user.email,
           role: user.role,
           profilePicture: user.profilePicture,
-          phone: user.phone,
-          city: user.city,
-          gender: user.gender,
-          createdAt: user.createdAt,
+          otpExpiresIn: user.otpExpiresIn,
           status: user.status,
+          createdAt: user.createdAt,
           favorites: user.favorites,
           hostels: user.hostels,
+          favorites: user.favorites,
+          hostelsOwned: user.hostelsOwned,
+          bookings: user.bookings,
+          visitRequests: user.visitRequests,
+          reviewsPosted: user.reviewsPosted,
         },
       },
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-const changePassword = async (req, res) => {
+const changePassword = async (req, res, next) => {
   try {
     let userId = req.user.id;
     const { oldPassword, newPassword, confirmPassword } = req.body;
@@ -414,30 +413,18 @@ const changePassword = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-let updateProfile = async (req, res) => {
+const updateProfile = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Comes from verifyToken middleware
-    if (Object.keys(req.body).length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No fields provided to update",
-        data: null,
-        error: null,
-      });
-    }
-    // Prevent email, otp, role, and password updates
+    const userId = req.user.id;
+    // Prevent email, otp, role, and password etc. updates
     const forbiddenFields = [
       "email",
       "role",
+      "password",
       "otp",
       "otpExpiresIn",
       "password",
@@ -445,7 +432,10 @@ let updateProfile = async (req, res) => {
       "updatedAt",
       "status",
       "favorites",
-      "hostels",
+      "hostelsOwned",
+      "bookings",
+      "visistRequests",
+      "reviewsPosted",
     ];
     forbiddenFields.forEach((field) => {
       if (field in req.body) {
@@ -459,20 +449,18 @@ let updateProfile = async (req, res) => {
       "fullName",
       "email",
       "role",
-      "city",
       "profilePicture",
-      "status",
       "phone",
+      "city",
       "createdAt",
       "updatedAt",
-      "otpExpiresIn",
     ]);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given ID"],
       });
     }
     res.status(200).json({
@@ -482,28 +470,27 @@ let updateProfile = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
-let logout = async (req, res) => {
+const logout = async (req, res, next) => {
   try {
     let id = req.params.id;
-    const user = await Users.findByIdAndDelete(id).populate([
-      "favorites",
-      "hostels",
+    const user = await Users.findByIdAndDelete(id).select([
+      "fullName",
+      "email",
+      "role",
+      "phone",
+      "city",
+      "gender",
     ]);
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given ID"],
       });
     }
     res.status(200).json({
@@ -513,52 +500,75 @@ let logout = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let deleteUsers = async (req, res) => {
+const toggleUserStatus = async (req, res, next) => {
   try {
-    const users = await Users.find().populate(["favorites", "hostels"]);
-    if (users.length === 0) {
+    const { id } = req.params; // userId to toggle
+    const requester = req.user; // comes from verifyToken middleware
+
+    // Only admin can toggle user status
+    // if (requester.role !== "admin") {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: "Forbidden: Only admins can change user status",
+    //     data: null,
+    //     error: ["Permission denied"],
+    //   });
+    // }
+    const user = await Users.findById(id);
+    if (!user) {
       return res.status(404).json({
         success: false,
-        message: "No more data to delete",
+        message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given ID"],
       });
     }
-    await Users.deleteMany();
+    // Handle inactive accounts
+    if (user.status === "inactive") {
+      return res.status(400).json({
+        success: false,
+        message: "User account is inactive and cannot be toggled",
+        data: null,
+        error: ["Activate the user before banning/unbanning"],
+      });
+    }
+    // Toggle logic
+    if (user.status === "active") {
+      user.status = "banned";
+    } else if (user.status === "banned") {
+      user.status = "active";
+    }
+    await user.save();
+
     res.status(200).json({
       success: true,
-      message: "Users data deleted successfully",
-      data: users,
+      message: `User status changed to ${user.status}`,
+      data: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        status: user.status,
+      },
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: [error.message],
-    });
+    next(error);
   }
 };
 
 export {
   getUsers,
   getProfile,
-  signupUser,
+  register,
   verifyEmail,
   resendOtp,
   loginUser,
   changePassword,
   updateProfile,
   logout,
-  deleteUsers,
+  toggleUserStatus,
 };

@@ -27,16 +27,22 @@ transporter.use(
   })
 );
 
-const sendEmail = async (to, subject, text) => {
+const sendEmail = async (to, subject, context) => {
   try {
-    const info = await transporter.sendMail({
+    const info = transporter.sendMail({
       from: process.env.EMAIL_FROM,
       to: to,
       subject: subject,
-      text: text,
+      text: `Hello ${context.fullName}, your OTP is ${context.otp}. It expires in ${context.otpTTLMinutes} minutes.`,
       template: "email",
       context: {
-        otp: text,
+        APP_NAME: "HostelValy",
+        USER_NAME: context.fullName,
+        OTP_CODE: context.otp,
+        OTP_TTL_MINUTES: context.otpTTLMinutes,
+        VERIFY_URL: `http://localhost:${process.env.PORT}/verify/${context.otp}`,
+        SUPPORT_EMAIL: process.env.EMAIL_FROM,
+        CURRENT_YEAR: new Date().getFullYear(),
       },
     });
     console.log("Message sent: " + info.response);

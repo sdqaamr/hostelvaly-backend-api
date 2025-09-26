@@ -8,18 +8,27 @@ import reviewRoutes from "./routes/reviews.js";
 import { apiRateLimit } from "./middlewares/api-limit.js";
 import dbConnect from "./config/database.js";
 import cors from "cors";
-import config from "./config/config.js";
+import dotenv from "dotenv";
+import jsonErrorHandler from "./middlewares/jsonErrorHandler.js";
 
 const corsOptions = {
-  origin: config.appUrl,
+  origin: process.env.APP_URL,
   optionsSuccessStatus: 200,
 };
+
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
+// Connect to Database
 dbConnect();
 
 // Hostels
@@ -39,11 +48,18 @@ app.use("/api/reviews/", reviewRoutes);
 
 // Handle 404 for undefined routes
 app.use((req, res, next) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({
+    success: false,
+    message: "The requested endpoint does not exist",
+    data: null,
+    error: ["Route not found"],
+  });
 });
 
-const port = config.port || 3000;
-const host = config.host || "localhost";
+app.use(jsonErrorHandler);
+
+const port = process.env.PORT || 3000;
+const host = process.env.HOST || "localhost";
 app.listen(port, host, () => {
   console.log(`Server is running on http://${host}:${port}`);
 });

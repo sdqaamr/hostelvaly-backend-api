@@ -1,6 +1,6 @@
 import Bookings from "../models/bookings.js";
 
-let getBookings = async (req, res) => {
+let getBookings = async (req, res, next) => {
   try {
     const bookings = await Bookings.find()
       .select([
@@ -36,16 +36,11 @@ let getBookings = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let getBooking = async (req, res) => {
+let getBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
     const booking = await Bookings.findById(id)
@@ -88,16 +83,11 @@ let getBooking = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let addBooking = async (req, res) => {
+let addBooking = async (req, res, next) => {
   try {
     let { roomType, paymentMethod, hostel, fromDate, toDate } = req.body;
     let validationErrors = [];
@@ -161,16 +151,11 @@ let addBooking = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let editBooking = async (req, res) => {
+let editBooking = async (req, res, next) => {
   try {
     const id = req.params.id;
     const booking = await Bookings.findByIdAndUpdate(id, req.body, {
@@ -207,16 +192,11 @@ let editBooking = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let cancelBooking = async (req, res) => {
+let cancelBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
     let user = req.user; // get the authenticated user from request
@@ -263,16 +243,11 @@ let cancelBooking = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let deleteBookings = async (req, res) => {
+let deleteBookings = async (req, res, next) => {
   try {
     const bookings = await Bookings.find()
       .populate({
@@ -309,12 +284,7 @@ let deleteBookings = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 

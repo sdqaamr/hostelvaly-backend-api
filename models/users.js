@@ -35,16 +35,14 @@ const usersSchema = mongoose.Schema(
     phone: String,
     city: {
       type: String,
-      required: true,
       trim: true,
     },
     gender: {
       type: String,
       enum: ["male", "female"],
-      required: true,
     },
     otp: {
-      type: String,
+      type: Number,
       default: null,
     },
     otpExpiresIn: {

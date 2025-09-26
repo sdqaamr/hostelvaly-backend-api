@@ -1,6 +1,6 @@
 import VisitRequests from "../models/visitRequests.js";
 
-let getVisitRequests = async (req, res) => {
+let getVisitRequests = async (req, res, next) => {
   try {
     const visitRequests = await VisitRequests.find()
       .select([
@@ -26,16 +26,11 @@ let getVisitRequests = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let getVisitRequest = async (req, res) => {
+let getVisitRequest = async (req, res, next) => {
   try {
     let id = req.params.id;
     const visitRequest = await VisitRequests.findById(id)
@@ -71,16 +66,11 @@ let getVisitRequest = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status.apply(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let createVisitRequest = async (req, res) => {
+let createVisitRequest = async (req, res, next) => {
   try {
     let { hostel, fullName, phone, visitDate, whatsappUpdates, user } =
       req.body;
@@ -125,16 +115,11 @@ let createVisitRequest = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let editVisitRequest = async (req, res) => {
+let editVisitRequest = async (req, res, next) => {
   try {
     const id = req.params.id;
     if (Object.keys(req.body).length === 0) {
@@ -171,16 +156,11 @@ let editVisitRequest = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let cancelVisitRequest = async (req, res) => {
+let cancelVisitRequest = async (req, res, next) => {
   try {
     let id = req.params.id;
     const visitRequest = await VisitRequests.findByIdAndDelete(id).populate([
@@ -202,16 +182,11 @@ let cancelVisitRequest = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let deleteVisitRequests = async (req, res) => {
+let deleteVisitRequests = async (req, res, next) => {
   try {
     const visitRequests = await VisitRequests.find().populate([
       { path: "hostel", select: "name" },
@@ -233,12 +208,7 @@ let deleteVisitRequests = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 

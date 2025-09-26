@@ -1,6 +1,6 @@
 import Reviews from "../models/reviews.js";
 
-let getReviews = async (req, res) => {
+let getReviews = async (req, res, next) => {
   try {
     const reviews = await Reviews.find().populate([
       { path: "hostel", select: "name" },
@@ -13,16 +13,11 @@ let getReviews = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let getReview = async (req, res) => {
+let getReview = async (req, res, next) => {
   try {
     let id = req.params.id;
     const review = await Reviews.findById(id).populate([
@@ -45,16 +40,11 @@ let getReview = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status.apply(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let createReview = async (req, res) => {
+let createReview = async (req, res, next) => {
   try {
     let { rating, comment, hostel } = req.body;
     let validationErrors = [];
@@ -89,16 +79,11 @@ let createReview = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let updateReview = async (req, res) => {
+let updateReview = async (req, res, next) => {
   try {
     const id = req.params.id;
     let reviewData = req.body;
@@ -138,16 +123,11 @@ let updateReview = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let deleteReview = async (req, res) => {
+let deleteReview = async (req, res, next) => {
   try {
     let id = req.params.id;
     let user = req.user;
@@ -170,16 +150,11 @@ let deleteReview = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
-let deleteReviews = async (req, res) => {
+let deleteReviews = async (req, res, next) => {
   try {
     const reviews = await Reviews.find().populate([
       { path: "hostel", select: "name" },
@@ -201,12 +176,7 @@ let deleteReviews = async (req, res) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    next(error);
   }
 };
 
