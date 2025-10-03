@@ -24,9 +24,9 @@ const getHostels = async (req, res, next) => {
         .select([
           "name",
           "address",
-          "contact",
           "amenities",
           "roomType",
+          "rating",
           "owner",
         ]),
     ]);
@@ -51,13 +51,31 @@ const getHostels = async (req, res, next) => {
 const getHostel = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const hostel = await Hostels.findById(id).populate("owner", ["fullName"]);
+    const hostel = await Hostels.findById(id)
+      .populate("owner", ["fullName"])
+      .populate("bookings", ["roomType", "fromDate", "toDate", "user"])
+      .populate("visitRequests", ["visitDate", "user"])
+      .select([
+        "name",
+        "address",
+        "amenities",
+        "roomType",
+        "images",
+        "description",
+        "securityCharges",
+        "isAvailable",
+        "rating",
+        "reviewsCount",
+        "owner",
+        "bookings",
+        "visitRequests",
+      ]);
     if (!hostel) {
       return res.status(404).json({
         success: false,
         message: "Hostel not found",
         data: null,
-        error: null, //execution is successfull
+        error: ["No hostel exists with the given ID"],
       });
     }
     res.status(200).json({
@@ -73,7 +91,7 @@ const getHostel = async (req, res, next) => {
 
 const addNewHostel = async (req, res, next) => {
   try {
-    const { name = "", city = "", isAvailable = false } = req.body;
+    const { name, city, isAvailable } = req.body;
     const validationErrors = [];
     if (!name) {
       validationErrors.push("Hostel name is required");
@@ -112,25 +130,36 @@ const updateHostel = async (req, res, next) => {
     const { id } = req.params;
     const hostelData = req.body;
     const userId = req.user.id;
-    if (!hostelData || Object.keys(hostelData).length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No fields provided to update",
-        data: null,
-        error: null,
-      });
-    }
+    const forbiddenFields = [
+      "isAvailable",
+      "reviews",
+      "rating",
+      "reviewsCount",
+      "owner",
+      "bookings",
+      "visitRequests",
+      "createdAt",
+      "updatedAt",
+    ];
+    forbiddenFields.forEach((field) => {
+      if (field in req.body) {
+        delete req.body[field];
+      }
+    });
     const hostel = await Hostels.findOneAndUpdate(
       { _id: id, owner: userId },
       hostelData,
       { new: true }
-    ).populate("owner", ["fullName"]);
+    )
+      .populate("owner", ["fullName"])
+      .populate("bookings", ["roomType", "fromDate", "toDate", "user"])
+      .populate("visitRequests", ["visitDate", "user"]);
     if (!hostel) {
       return res.status(404).json({
         success: false,
         message: "Hostel not found or not owned by the user",
         data: null,
-        error: null,
+        error: ["Hostel not exists with the given ID"],
       });
     }
     res.status(200).json({
@@ -154,7 +183,7 @@ const deleteHostel = async (req, res, next) => {
         success: false,
         message: "Hostel not found or not owned by user",
         data: null,
-        error: null,
+        error: ["Hostel not exists with the given ID"],
       });
     }
     res.status(200).json({

@@ -12,6 +12,7 @@ const seedHostels = async () => {
       // 1
       _id: "687a8a22cc7148c1e78a99be",
       name: "Al-Madina Boys Hostel",
+      city: "Lahore",
       area: "Johar Town",
       address: "Near Emporium Mall, Johar Town, Lahore",
       amenities: ["Wi-Fi", "Laundry", "Mess", "Parking"],
@@ -60,6 +61,7 @@ const seedHostels = async () => {
       // 2
       _id: "687a8a22cc7148c1e78a99bf",
       name: "Iqra Boys Hostel",
+      city: "Lahore",
       area: "DHA",
       address: "Phase 6, DHA, Lahore",
       amenities: ["Wi-Fi", "Parking", "Mess", "CCTV"],
@@ -98,6 +100,7 @@ const seedHostels = async () => {
       // 3
       _id: "687a8a22cc7148c1e78a99c0",
       name: "Shaheen Girls Hostel",
+      city: "Islamabad",
       area: "F-8",
       address: "Street 23, F-8, Islamabad",
       amenities: ["Wi-Fi", "Geyser", "Laundry", "CCTV", "Reception"],
@@ -144,6 +147,7 @@ const seedHostels = async () => {
       // 4
       _id: "687a8a22cc7148c1e78a99c1",
       name: "Comfort Hostel",
+      city: "Karachi",
       area: "PECHS",
       address: "Block 6, PECHS, Karachi",
       amenities: ["Wi-Fi", "Parking", "Filtered Water", "Mess"],
@@ -184,6 +188,7 @@ const seedHostels = async () => {
       // 5
       _id: "687a8a22cc7148c1e78a99c2",
       name: "Al-Fateh Girls Hostel",
+      city: "Faisalabad",
       area: "Jaranwala Road",
       address: "Near Central Park, Faisalabad",
       amenities: ["Wi-Fi", "Fire Extinguishers", "Laundry", "Gym"],
@@ -236,6 +241,7 @@ const seedHostels = async () => {
       // 6
       _id: "687a8a22cc7148c1e78a99c3",
       name: "Rahat Hostel",
+      city: "Peshawar",
       area: "University Town",
       address: "Near UET Peshawar",
       amenities: ["Wi-Fi", "Mess", "Parking", "Reception"],
@@ -268,6 +274,7 @@ const seedHostels = async () => {
       // 7
       _id: "687a8a22cc7148c1e78a99c4",
       name: "Nexus Hostel",
+      city: "Islamabad",
       area: "G-9",
       address: "Street 12, G-9, Islamabad",
       amenities: ["Wi-Fi", "Guest Rooms", "CCTV", "Mess"],
@@ -300,6 +307,7 @@ const seedHostels = async () => {
       // 8
       _id: "687a8a22cc7148c1e78a99c5",
       name: "City View Boys Hostel",
+      city: "Lahore",
       area: "Garden Town",
       address: "Near Good Earth, Garden Town",
       amenities: ["Wi-Fi", "Mess", "Laundry"],

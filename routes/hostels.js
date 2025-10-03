@@ -8,16 +8,19 @@ import {
 } from "../controllers/hostels.js";
 import validateId from "../middlewares/validateId.js";
 import { authorizeRoles, verifyToken } from "../middlewares/auth.js";
+import checkBannedUser from "../middlewares/checkBanned.js";
+import { checkRequestBody } from "../middlewares/validateRequest.js";
 const router = express.Router();
 
 router.get("/", getHostels);
 router.get("/:id", validateId, getHostel);
-router.post("/", verifyToken, addNewHostel);
-router.put("/:id", verifyToken, validateId, updateHostel);
+router.post("/", verifyToken, checkBannedUser, checkRequestBody, addNewHostel);
+router.put("/:id", verifyToken, validateId, checkBannedUser, checkRequestBody, updateHostel);
 router.delete(
   "/:id",
   verifyToken,
   authorizeRoles("admin", "owner"),
+  checkBannedUser,
   validateId,
   deleteHostel
 );

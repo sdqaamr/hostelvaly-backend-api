@@ -31,13 +31,17 @@ const hostelsSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     area: {
       type: String,
       trim: true,
     },
     address: {
       type: String,
-      required: true,
       trim: true,
       minlength: 2,
       maxlength: 80,
@@ -52,7 +56,6 @@ const hostelsSchema = mongoose.Schema(
     images: [String],
     description: {
       type: String,
-      required: true,
       trim: true,
       minlength: 10,
       maxlength: 500,

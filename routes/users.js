@@ -17,14 +17,26 @@ import { checkRequestBody } from "../middlewares/validateRequest.js";
 import validateId from "../middlewares/validateId.js";
 const router = express.Router();
 
-router.get("/", verifyToken, authorizeRoles("admin"), getUsers);
+router.get(
+  "/",
+  verifyToken,
+  checkBannedUser,
+  authorizeRoles("admin"),
+  getUsers
+);
 router.get("/me", verifyToken, getProfile);
 router.post("/register", checkRequestBody, register);
 router.post("/verify-email", checkRequestBody, verifyEmail);
 router.post("/resend-otp", checkRequestBody, resendOtp);
 router.post("/login", checkRequestBody, loginUser);
 router.put("/", verifyToken, checkBannedUser, checkRequestBody, updateProfile);
-router.put("/change-password", verifyToken, checkBannedUser, checkRequestBody, changePassword);
+router.put(
+  "/change-password",
+  verifyToken,
+  checkBannedUser,
+  checkRequestBody,
+  changePassword
+);
 router.delete("/logout", verifyToken, logout);
 router.patch(
   "/:id/toggle",

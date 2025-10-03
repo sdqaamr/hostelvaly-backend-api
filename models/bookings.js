@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 function transformBooking(doc, ret) {
-  if (ret.hostel?.roomTypes && Array.isArray(ret.hostel.roomTypes)) {
-    const found = ret.hostel.roomTypes.find(
+  if (ret.hostel?.roomType && Array.isArray(ret.hostel.roomType)) {
+    const found = ret.hostel.roomType.find(
       (rt) => rt._id.toString() === ret.roomType?.toString()
     );
     if (found) ret.roomType = found;
