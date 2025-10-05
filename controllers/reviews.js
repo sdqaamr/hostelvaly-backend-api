@@ -1,15 +1,29 @@
 import Reviews from "../models/reviews.js";
+import mongoose from "mongoose";
 
 let getReviews = async (req, res, next) => {
   try {
-    const reviews = await Reviews.find().populate([
-      { path: "hostel", select: "name" },
-      { path: "user", select: "fullName" },
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.max(1, parseInt(req.query.limit) || 5);
+    const skip = (page - 1) * limit;
+    const [total, reviews] = await Promise.all([
+      Reviews.countDocuments(),
+      Reviews.find()
+        .skip(skip)
+        .limit(limit)
+        .populate("hostel", ["name"])
+        .populate("user", ["fullName"]),
     ]);
     res.status(200).json({
       success: true,
       message: "Reviews fetched successfully",
       data: reviews,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
       error: null,
     });
   } catch (error) {
@@ -29,7 +43,7 @@ let getReview = async (req, res, next) => {
         success: false,
         message: "Review not found",
         data: null,
-        error: null, //execution is successfull
+        error: ["Review not exists with the given ID"],
       });
     }
     res.status(200).json({
@@ -56,6 +70,10 @@ let createReview = async (req, res, next) => {
     }
     if (!hostel) {
       validationErrors.push("Hostel ID is required");
+    }
+    // Check if hostel is a valid ObjectId
+    if (hostel && !mongoose.Types.ObjectId.isValid(hostel)) {
+      validationErrors.push("Hostel ID is not a valid ObjectId");
     }
     if (validationErrors.length > 0) {
       return res.status(400).json({
@@ -85,26 +103,18 @@ let createReview = async (req, res, next) => {
 
 let updateReview = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const reviewId = req.params.id;
     let reviewData = req.body;
-    let user = req.user;
-    let userId = user.id;
-    if (Object.keys(req.body).length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No fields provided to update",
-        data: null,
-        error: null,
-      });
-    }
-    const review = await Reviews.findOneAndUpdate(
-      {
-        _id: id,
-        user: userId,
-      },
-      reviewData,
-      { new: true }
-    ).populate([
+    const forbiddenFields = ["postedAt", "isVerified", "hostel", "user"];
+    forbiddenFields.forEach((field) => {
+      if (field in req.body) {
+        delete req.body[field];
+      }
+    });
+    const review = await Reviews.findByIdAndUpdate(reviewId, reviewData, {
+      new: true,
+      runValidators: true,
+    }).populate([
       { path: "hostel", select: "name" },
       { path: "user", select: "fullName" },
     ]);
@@ -113,7 +123,7 @@ let updateReview = async (req, res, next) => {
         success: false,
         message: "Review can't be updated or not belongs to the user",
         data: null,
-        error: null,
+        error: ["Review not found or you are not authorized to update it"],
       });
     }
     res.status(200).json({
@@ -140,7 +150,7 @@ let deleteReview = async (req, res, next) => {
         success: false,
         message: "Review not found or not belongs to the user",
         data: null,
-        error: null,
+        error: ["Review not found or you are not authorized to modify it"],
       });
     }
     res.status(200).json({
@@ -154,37 +164,10 @@ let deleteReview = async (req, res, next) => {
   }
 };
 
-let deleteReviews = async (req, res, next) => {
-  try {
-    const reviews = await Reviews.find().populate([
-      { path: "hostel", select: "name" },
-      { path: "user", select: "fullName" },
-    ]);
-    if (reviews.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "No more data to delete",
-        data: null,
-        error: null,
-      });
-    }
-    await Reviews.deleteMany();
-    res.status(200).json({
-      success: true,
-      message: "Reviews deleted successfully",
-      data: reviews,
-      error: null,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 export {
   getReviews,
   getReview,
   createReview,
   updateReview,
   deleteReview,
-  deleteReviews,
 };

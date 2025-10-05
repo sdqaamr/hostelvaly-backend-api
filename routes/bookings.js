@@ -4,7 +4,7 @@ import {
   getBooking,
   editBooking,
   addBooking,
-  cancelBooking,
+  deleteBooking,
 } from "../controllers/bookings.js";
 import validateId from "../middlewares/validateId.js";
 import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
@@ -19,7 +19,7 @@ router.get(
   authorizeRoles("owner"),
   getBookings
 );
-router.get("/:id", verifyToken, checkBannedUser, validateId, getBooking);
+router.get("/:id", verifyToken, validateId, checkBannedUser, getBooking);
 router.post(
   "/create",
   verifyToken,
@@ -36,11 +36,11 @@ router.put(
   editBooking
 );
 router.delete(
-  "/cancel/:id",
+  "/:id",
   verifyToken,
   checkBannedUser,
   validateId,
-  cancelBooking
+  deleteBooking
 );
 
 export default router;

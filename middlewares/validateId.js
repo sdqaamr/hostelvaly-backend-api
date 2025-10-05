@@ -7,7 +7,7 @@ const validateId = (req, res, next) => {
       success: false,
       message: "Invalid ID format",
       data: null,
-      error: null,
+      error: ["The provided ID is not a valid ObjectId"],
     });
   }
   next();

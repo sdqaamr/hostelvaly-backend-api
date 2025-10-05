@@ -245,7 +245,7 @@ const resendOtp = async (req, res, next) => {
         success: false,
         message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given email"],
       });
     }
     if (user.status === "active") {
@@ -391,7 +391,7 @@ const changePassword = async (req, res, next) => {
         success: false,
         message: "User not found",
         data: null,
-        error: null,
+        error: ["No user exists with the given ID"],
       });
     }
     const isMatch = await bcrypt.compare(oldPassword, user.password);

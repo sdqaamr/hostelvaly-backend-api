@@ -4,18 +4,18 @@ import {
   getVisitRequest,
   createVisitRequest,
   editVisitRequest,
-  cancelVisitRequest,
-  deleteVisitRequests,
+  deleteVisitRequest,
 } from "../controllers/visitRequests.js";
 import validateId from "../middlewares/validateId.js";
-import { verifyToken } from "../middlewares/auth.js";
+import { verifyToken, authorizeRoles } from "../middlewares/auth.js";
+import checkBannedUser from "../middlewares/checkBanned.js";
+import { checkRequestBody } from "../middlewares/validateRequest.js";
 const router = express.Router();
 
-router.get("/", verifyToken, getVisitRequests);
-router.get("/:id", validateId, getVisitRequest);
-router.post("/create-new", createVisitRequest);
-router.put("/update/:id", validateId, editVisitRequest);
-router.delete("/cancel/:id", validateId, cancelVisitRequest);
-router.delete("/", verifyToken, deleteVisitRequests);
+router.get("/", verifyToken, authorizeRoles("admin"), getVisitRequests);
+router.get("/:id", validateId, verifyToken, getVisitRequest);
+router.post("/",verifyToken, checkBannedUser, checkRequestBody, createVisitRequest);
+router.put("/:id", verifyToken, validateId, checkBannedUser, checkRequestBody, editVisitRequest);
+router.delete("/:id", validateId, deleteVisitRequest);
 
 export default router;

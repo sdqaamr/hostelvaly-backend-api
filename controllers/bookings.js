@@ -45,7 +45,7 @@ let getBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
     const booking = await Bookings.findById(id)
-      .populate("roomType", ["tyoe", "monthlyRent"])
+      .populate("roomType", ["type", "monthlyRent"])
       .populate("hostel", ["name"])
       .populate("user", ["fullName"]);
 
@@ -66,7 +66,7 @@ let getBooking = async (req, res, next) => {
     res.status(200).json({
       success: true,
       id: id,
-      message: "Booking by ID is fetched successfully",
+      message: "Booking fetched successfully",
       data: booking,
       error: null,
     });
@@ -94,11 +94,11 @@ let addBooking = async (req, res, next) => {
     if (!totalAmount) {
       validationErrors.push("Total amount is required");
     }
-    // ✅ Check if hostel is a valid ObjectId
+    // Check if hostel is a valid ObjectId
     if (hostel && !mongoose.Types.ObjectId.isValid(hostel)) {
       validationErrors.push("Hostel ID is not a valid ObjectId");
     }
-    // ✅ Check if roomType is a valid ObjectId
+    // Check if roomType is a valid ObjectId
     if (roomType && !mongoose.Types.ObjectId.isValid(roomType)) {
       validationErrors.push("RoomType ID is not a valid ObjectId");
     }
@@ -134,7 +134,6 @@ let addBooking = async (req, res, next) => {
       );
       booking.roomType = match || null;
     }
-
     res.status(201).json({
       success: true,
       message: "Booked hostel successfully",
@@ -142,18 +141,25 @@ let addBooking = async (req, res, next) => {
       error: null,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Internal server error",
-      data: null,
-      error: error.message,
-    });
+    error(next);
   }
 };
 
 let editBooking = async (req, res, next) => {
   try {
     const bookingId = req.params.id;
+    const forbiddenFields = [
+      "status",
+      "user",
+      "hostel",
+      "createdAt",
+      "updatedAt",
+    ];
+    forbiddenFields.forEach((field) => {
+      if (field in req.body) {
+        delete req.body[field];
+      }
+    });
     const booking = await Bookings.findByIdAndUpdate(bookingId, req.body, {
       new: true,
       runValidators: true,
@@ -167,24 +173,12 @@ let editBooking = async (req, res, next) => {
         select: "fullName",
       })
       .lean();
-    const forbiddenFields = [
-      "status",
-      "user",
-      "hostel",
-      "createdAt",
-      "updatedAt",
-    ];
-    forbiddenFields.forEach((field) => {
-      if (field in req.body) {
-        delete req.body[field];
-      }
-    });
     if (!booking) {
       return res.status(404).json({
         success: false,
         message: "Booking can't be updated or not found at all",
         data: null,
-        error: null,
+        error: ["Booking not found or you are not authorized to update it"],
       });
     }
     // Replace ObjectId roomType with actual object
@@ -205,29 +199,20 @@ let editBooking = async (req, res, next) => {
   }
 };
 
-let cancelBooking = async (req, res, next) => {
+let deleteBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
     let user = req.user; // get the authenticated user from request
     const booking = await Bookings.deleteOne({
       _id: id,
       user: user.id,
-    })
-      .populate({
-        path: "hostel",
-        select: "name roomType", // get the whole roomType array
-      })
-      .populate({
-        path: "user",
-        select: "fullName",
-      })
-      .lean();
+    });
     if (!booking) {
       return res.status(404).json({
         success: false,
         message: "Booking not found",
         data: null,
-        error: null,
+        error: ["Booking not exists with the given ID"],
       });
     }
     // now safe to check booking.hostel
@@ -240,14 +225,14 @@ let cancelBooking = async (req, res, next) => {
     if (booking.deletedCount === 0) {
       return res.status(200).json({
         success: false,
-        message: "Booking can't be deleted or not exist at all",
+        message: "Booking can't be deleted or not exists at all",
         data: null,
-        error: null,
+        error: ["Booking not found or you are not authorized to delete it"],
       });
     }
     res.status(200).json({
       success: true,
-      message: "Booking cancelled successfully",
+      message: "Booking deleted successfully",
       data: booking,
       error: null,
     });
@@ -261,5 +246,5 @@ export {
   getBooking,
   addBooking,
   editBooking,
-  cancelBooking,
+  deleteBooking,
 };

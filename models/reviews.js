@@ -4,8 +4,10 @@ const reviewsSchema = mongoose.Schema({
   rating: {
     type: Number,
     required: true,
-    min: 1,
-    max: 5,
+    validate: {
+      validator: (value) => value > 0 && value < 6,
+      message: "Rating must be greater than 0 and less than 6",
+    },
   },
   comment: {
     type: String,
