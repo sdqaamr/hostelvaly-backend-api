@@ -241,10 +241,4 @@ let deleteBooking = async (req, res, next) => {
   }
 };
 
-export {
-  getBookings,
-  getBooking,
-  addBooking,
-  editBooking,
-  deleteBooking,
-};
+export { getBookings, getBooking, addBooking, editBooking, deleteBooking };

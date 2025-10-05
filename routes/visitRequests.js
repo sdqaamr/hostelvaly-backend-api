@@ -12,10 +12,44 @@ import checkBannedUser from "../middlewares/checkBanned.js";
 import { checkRequestBody } from "../middlewares/validateRequest.js";
 const router = express.Router();
 
-router.get("/", verifyToken, authorizeRoles("admin"), getVisitRequests);
-router.get("/:id", validateId, verifyToken, getVisitRequest);
-router.post("/",verifyToken, checkBannedUser, checkRequestBody, createVisitRequest);
-router.put("/:id", verifyToken, validateId, checkBannedUser, checkRequestBody, editVisitRequest);
+router.get(
+  "/",
+  verifyToken,
+  authorizeRoles(
+    { admin: true, owner: false, student: false },
+    "VisistRequests"
+  ),
+  getVisitRequests
+);
+router.get(
+  "/:id",
+  validateId,
+  verifyToken,
+  authorizeRoles(
+    { admin: true, owner: true, student: "own" },
+    "VisistRequests"
+  ),
+  getVisitRequest
+);
+router.post(
+  "/",
+  verifyToken,
+  checkBannedUser,
+  checkRequestBody,
+  createVisitRequest
+);
+router.put(
+  "/:id",
+  verifyToken,
+  validateId,
+  checkBannedUser,
+  authorizeRoles(
+    { admin: true, owner: "own", student: "own" },
+    "VisistRequests"
+  ),
+  checkRequestBody,
+  editVisitRequest
+);
 router.delete("/:id", validateId, deleteVisitRequest);
 
 export default router;

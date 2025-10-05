@@ -21,7 +21,7 @@ router.get(
   "/",
   verifyToken,
   checkBannedUser,
-  authorizeRoles("admin"),
+  authorizeRoles({ admin: true, owner: false, student: false }, "Users"),
   getUsers
 );
 router.get("/me", verifyToken, getProfile);
@@ -37,12 +37,12 @@ router.put(
   checkRequestBody,
   changePassword
 );
-router.delete("/logout", verifyToken, logout);
+// router.delete("/logout", verifyToken, logout);
 router.patch(
   "/:id/toggle",
   verifyToken,
   validateId,
-  authorizeRoles("admin"), // Only admins can toggle
+  authorizeRoles({ admin: true, owner: false, student: false }, "Users"),
   toggleUserStatus
 );
 

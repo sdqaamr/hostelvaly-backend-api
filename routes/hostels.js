@@ -15,11 +15,19 @@ const router = express.Router();
 router.get("/", getHostels);
 router.get("/:id", validateId, getHostel);
 router.post("/", verifyToken, checkBannedUser, checkRequestBody, addNewHostel);
-router.put("/:id", verifyToken, validateId, checkBannedUser, checkRequestBody, updateHostel);
+router.put(
+  "/:id",
+  verifyToken,
+  validateId,
+  checkBannedUser,
+  authorizeRoles({ admin: true, owner: "own", student: false }, "Hostels"),
+  checkRequestBody,
+  updateHostel
+);
 router.delete(
   "/:id",
   verifyToken,
-  authorizeRoles("admin", "owner"),
+  authorizeRoles({ admin: true, owner: "own", student: false }, "Hostels"),
   checkBannedUser,
   validateId,
   deleteHostel

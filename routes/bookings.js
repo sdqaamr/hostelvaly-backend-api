@@ -16,30 +16,39 @@ router.get(
   "/",
   verifyToken,
   checkBannedUser,
-  authorizeRoles("owner"),
+  authorizeRoles({ admin: true, owner: false, student: false }, "Bookings"),
   getBookings
 );
-router.get("/:id", verifyToken, validateId, checkBannedUser, getBooking);
+router.get(
+  "/:id",
+  verifyToken,
+  validateId,
+  checkBannedUser,
+  authorizeRoles({ admin: true, owner: true, student: "own" }, "Bookings"),
+  getBooking
+);
 router.post(
-  "/create",
+  "/",
   verifyToken,
   checkBannedUser,
   checkRequestBody,
   addBooking
 );
 router.put(
-  "/update/:id",
+  "/:id",
   verifyToken,
-  checkBannedUser,
   validateId,
+  checkBannedUser,
+  authorizeRoles({ admin: true, owner: "own", student: "own" }, "Bookings"),
   checkRequestBody,
   editBooking
 );
 router.delete(
   "/:id",
   verifyToken,
-  checkBannedUser,
+  authorizeRoles({ admin: true, owner: "own", student: "own" }, "Bookings"),
   validateId,
+  checkBannedUser,
   deleteBooking
 );
 

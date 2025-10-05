@@ -105,7 +105,7 @@ let updateReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
     let reviewData = req.body;
-    const forbiddenFields = ["postedAt", "isVerified", "hostel", "user"];
+    const forbiddenFields = ["postedAt", "isVerified", "hostel"];
     forbiddenFields.forEach((field) => {
       if (field in req.body) {
         delete req.body[field];

@@ -15,7 +15,21 @@ const router = express.Router();
 router.get("/", getReviews);
 router.get("/:id", validateId, getReview);
 router.post("/", verifyToken, checkBannedUser, checkRequestBody, createReview);
-router.put("/:id", validateId, verifyToken, checkBannedUser, checkRequestBody, updateReview);
-router.delete("/:id", verifyToken, validateId, deleteReview);
+router.put(
+  "/:id",
+  validateId,
+  verifyToken,
+  checkBannedUser,
+  authorizeRoles({ admin: true, owner: "own", student: "own" }, "Reviews"),
+  checkRequestBody,
+  updateReview
+);
+router.delete(
+  "/:id",
+  verifyToken,
+  validateId,
+  authorizeRoles({ admin: true, owner: "own", student: "own" }, "Reviews"),
+  deleteReview
+);
 
 export default router;
