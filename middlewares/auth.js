@@ -1,4 +1,9 @@
 import jwt from "jsonwebtoken";
+import Reviews from "../models/reviews.js";
+import Bookings from "../models/bookings.js";
+import VisitRequests from "../models/visitRequests.js";
+import Users from "../models/users.js";
+import { Hostels } from "../models/hostels.js";
 
 const verifyToken = (req, res, next) => {
   try {
@@ -35,15 +40,13 @@ const verifyToken = (req, res, next) => {
 
 // _________________________________________________________________
 
-import Reviews from "../models/reviews.js";
-import Bookings from "../models/bookings.js";
-import VisitRequests from "../models/visitRequests.js";
-
 // Define all models here once
 const models = {
-  Reviews,
+  Users,
+  Hostels,
   Bookings,
   VisitRequests,
+  Reviews,
 };
 
 /**

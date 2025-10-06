@@ -15,7 +15,10 @@ const seedUsers = async () => {
       email: "siddiqadurrani@gmail.com",
       role: "admin",
       password: "$2b$10$5DwNKZfpLg25.ttRsASjnuTjDwU9V0lXQs.VS7xxSBRkmaHlZdyla", // pswdsiddiqa
-      profilePicture: "https://example.com/profile/siddiqa_durrani.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923338884900",
       city: "Multan",
       gender: "female",
@@ -43,7 +46,10 @@ const seedUsers = async () => {
       email: "ali.raza@gmail.com",
       role: "owner",
       password: "$2b$10$p7hAxJlIOf5gZRCKPc0iQ.uLHQYCAKFaioGt/HHq2AjvzYAAstwpS", // pswdraza
-      profilePicture: "https://example.com/profile/ali_raza.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923336667788",
       city: "Lahore",
       gender: "male",
@@ -72,7 +78,10 @@ const seedUsers = async () => {
       email: "imran.uet@gmail.com",
       role: "student",
       password: "$2b$10$RErto8RkzEZr1wiL0.n9/OjmlW8P2JyCYV4ozDP/oMlZq.UsULG.e", // pswdimran
-      profilePicture: "https://example.com/profile/muhammad_imran.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923337551234",
       city: "Peshawar",
       gender: "male",
@@ -95,7 +104,10 @@ const seedUsers = async () => {
       email: "ayesha.s@gmail.com",
       role: "student",
       password: "$2b$10$ZXPH0uiE.fsOBogmd2Jf5.GEYZ.nUYZdSeJo5fqZYNIq1rkrsWuN6", // pswdayesha
-      profilePicture: "https://example.com/profile/ayesha_siddiqui.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923331119988",
       city: "Karachi",
       gender: "female",
@@ -122,14 +134,18 @@ const seedUsers = async () => {
       email: "zain.abbas@yahoo.com",
       role: "owner",
       password: "$2b$10$m85jByMht8abcJMQQS8p8us9Wn9PvXMXlQ5fE65ld4m6QG5NcuxdO", // pswdzain
-      profilePicture: "https://example.com/profile/zain_abbas.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923334556677",
       city: "Faisalabad",
       gender: "male",
       otp: null,
       otpExpiresIn: null,
       status: "active",
-      favorites: ["687a8a22cc7148c1e78a99be", // Al-Madina Boys Hostel
+      favorites: [
+        "687a8a22cc7148c1e78a99be", // Al-Madina Boys Hostel
         "687a8a22cc7148c1e78a99c0", // Shaheen Girls Hostel
         "687a8a22cc7148c1e78a99c4", // Nexus Hostel
       ],
@@ -151,7 +167,10 @@ const seedUsers = async () => {
       email: "sara.ahmed@gmail.com",
       role: "student",
       password: "$2b$10$aN/aS3hy3kfvy4.u7oqZRO9FZjFQgIL.88oBT3nuDqB0EUKYCvYvu", // pswdsara
-      profilePicture: "https://example.com/profile/sara_ahmed.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923335667788",
       city: "Lahore",
       gender: "female",
@@ -173,7 +192,10 @@ const seedUsers = async () => {
       email: "bilal.tariq@outlook.com",
       role: "student",
       password: "$2b$10$qoEZgwoVto.JD/EiLnHyRO7ZUAkfZKUpQ.2Wfz6XcRfbWcXBCG7h2", // pswdbilal
-      profilePicture: "https://example.com/profile/bilal_tariq.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923339994433",
       city: "Islamabad",
       gender: "male",
@@ -193,7 +215,10 @@ const seedUsers = async () => {
       email: "hina.noor@gmail.com",
       role: "student",
       password: "$2b$10$iOyVVNaJcBy5aQB3dt81UOhckvkDBDmtmORsktYlOAAvV.pzQH7am", // pswdhina
-      profilePicture: "https://example.com/profile/hina_noor.jpg",
+      profilePicture: {
+        url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+        publicId: "xivirhvfjzx8omplxvbj",
+      },
       phone: "+923332223366",
       city: "Karachi",
       gender: "female",

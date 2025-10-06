@@ -2,6 +2,7 @@ import Users from "../models/users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/send-mail.js";
+import { deleteFromCloudinary } from "../middlewares/cloudinary.js";
 
 const getUsers = async (req, res, next) => {
   try {
@@ -474,6 +475,125 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
+const updateProfilePicture = async (req, res, next) => {
+  try {
+    const userId = req.user.id; // from verifyToken middleware
+
+    const user = await Users.findById(userId).select([
+      "fullName",
+      "email",
+      "profilePicture",
+      "createdAt",
+      "updatedAt",
+    ]);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: ["No user exists with the given ID"],
+      });
+    }
+
+    // No file uploaded
+    if (!req.cloudinaryFile) {
+      return res.status(400).json({
+        success: false,
+        message: "No profile picture file provided",
+        data: null,
+        error: ["Profile picture image is required"],
+      });
+    }
+
+    // If existing picture → delete old one
+    if (user.profilePicture?.publicId) {
+      await deleteFromCloudinary(user.profilePicture.publicId);
+    }
+
+    // Add / update new one
+    user.profilePicture = req.cloudinaryFile;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: user.profilePicture
+        ? "Profile picture updated successfully"
+        : "Profile picture added successfully",
+      data: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteProfilePicture = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const user = await Users.findById(userId).select([
+      "fullName",
+      "email",
+      "profilePicture",
+      "createdAt",
+      "updatedAt",
+    ]);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: ["No user exists with the given ID"],
+      });
+    }
+    const DEFAULT_PIC = {
+      url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
+      publicId: "xivirhvfjzx8omplxvbj",
+    };
+    // ✅ If already default picture — don’t reset or delete again
+    if (
+      user.profilePicture?.publicId === DEFAULT_PIC.publicId ||
+      user.profilePicture?.url === DEFAULT_PIC.url
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile picture is already the default one",
+        data: null,
+        error: ["No custom profile picture to delete"],
+      });
+    }
+    // ✅ Delete old Cloudinary image (custom one)
+    if (user.profilePicture?.publicId) {
+      await deleteFromCloudinary(user.profilePicture.publicId);
+    }
+    // ✅ Set to default
+    user.profilePicture = DEFAULT_PIC;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Profile picture deleted and reset to default successfully",
+      data: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profilePicture: user.profilePicture,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const logout = async (req, res, next) => {
   try {
     let id = req.params.id;
@@ -569,6 +689,8 @@ export {
   loginUser,
   changePassword,
   updateProfile,
+  updateProfilePicture,
+  deleteProfilePicture,
   logout,
   toggleUserStatus,
 };

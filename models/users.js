@@ -29,8 +29,16 @@ const usersSchema = mongoose.Schema(
       required: true,
     },
     profilePicture: {
-      type: String,
-      default: "placeholder.png",
+      url: { 
+        type: String, 
+        trim: true, 
+        default: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp" 
+      },
+      publicId: { 
+        type: String, 
+        trim: true, 
+        default: "xivirhvfjzx8omplxvbj" 
+      },
     },
     phone: String,
     city: {
@@ -67,9 +75,9 @@ const usersSchema = mongoose.Schema(
       },
     ],
     bookings: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Bookings",
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Bookings",
+    },
     visitRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
