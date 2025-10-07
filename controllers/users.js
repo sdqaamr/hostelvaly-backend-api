@@ -358,6 +358,61 @@ const loginUser = async (req, res, next) => {
   }
 };
 
+const switchUserRole = async (req, res, next) => {
+  try {
+    const currentUser = req.user; // user making the request
+    const { userId } = req.body || {};
+    // Determine target user ID
+    const targetUserId =
+      currentUser.role === "admin" && userId ? userId : currentUser.id;
+    // If non-admin tries to change someone else's role
+    if (currentUser.role !== "admin" && currentUser.id !== targetUserId) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only switch your own role.",
+        data: null,
+        error: ["Unauthorized role switch attempt"],
+      });
+    }
+    // Find the target user
+    const user = await Users.findById(targetUserId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: null,
+        error: ["No user exists with the given ID"],
+      });
+    }
+    // Prevent admins from toggling their own role through this route
+    if (user.role === "admin") {
+      return res.status(400).json({
+        success: false,
+        message: "Admins cannot toggle their role through this route.",
+        data: null,
+        error: ["Invalid role toggle"],
+      });
+    }
+    // Toggle between 'student' and 'owner'
+    user.role = user.role === "student" ? "owner" : "student";
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Role switched successfully to '${user.role}'`,
+      data: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const changePassword = async (req, res, next) => {
   try {
     let userId = req.user.id;
@@ -687,6 +742,7 @@ export {
   verifyEmail,
   resendOtp,
   loginUser,
+  switchUserRole,
   changePassword,
   updateProfile,
   updateProfilePicture,

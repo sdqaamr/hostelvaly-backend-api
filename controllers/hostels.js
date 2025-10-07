@@ -1,4 +1,5 @@
 import { Hostels } from "../models/hostels.js";
+import Users from "../models/users.js";
 
 const getHostels = async (req, res, next) => {
   try {
@@ -91,16 +92,13 @@ const getHostel = async (req, res, next) => {
 
 const addNewHostel = async (req, res, next) => {
   try {
-    const { name, city, isAvailable } = req.body;
+    const { name, city } = req.body;
     const validationErrors = [];
     if (!name) {
       validationErrors.push("Hostel name is required");
     }
     if (!city) {
       validationErrors.push("City is required");
-    }
-    if (typeof isAvailable !== "boolean") {
-      validationErrors.push("isAvailable field must be boolean");
     }
     if (validationErrors.length > 0) {
       return res.status(400).json({
@@ -111,10 +109,15 @@ const addNewHostel = async (req, res, next) => {
       });
     }
     const user = req.user;
-    const hostel = new Hostels({ name, city, isAvailable, owner: user.id });
+    const hostel = new Hostels({ name, city, owner: user.id });
     await hostel.save();
-    await hostel.populate("owner", ["fullName"]);
-    res.status(201).json({
+    await hostel.populate("owner", ["fullName", "role"]);
+    // ✅ If the creator is a student, update their role to "owner"
+if (user.role === "student") {
+  const Users = (await import("../models/users.js")).default;
+  await Users.findByIdAndUpdate(user.id, { role: "owner" });
+}
+    res.status(200).json({
       success: true,
       message: "Hostel added successfully",
       data: hostel,
@@ -173,6 +176,41 @@ const updateHostel = async (req, res, next) => {
   }
 };
 
+const toggleHostelAvailability = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    // Fetch hostel
+    const hostel = await Hostels.findById(id);
+    if (!hostel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hostel not found",
+        data: null,
+        error: ["No hostel exists with the given ID"],
+      });
+    }
+    // Toggle availability
+    hostel.isAvailable = !hostel.isAvailable;
+    await hostel.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Hostel availability toggled to ${
+        hostel.isAvailable ? "available" : "unavailable"
+      }`,
+      data: {
+        id: hostel._id,
+        name: hostel.name,
+        city: hostel.city,
+        isAvailable: hostel.isAvailable,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteHostel = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -197,4 +235,11 @@ const deleteHostel = async (req, res, next) => {
   }
 };
 
-export { getHostels, getHostel, addNewHostel, updateHostel, deleteHostel };
+export {
+  getHostels,
+  getHostel,
+  addNewHostel,
+  updateHostel,
+  toggleHostelAvailability,
+  deleteHostel,
+};

@@ -38,9 +38,8 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-// _________________________________________________________________
+// _______________________________________________
 
-// Define all models here once
 const models = {
   Users,
   Hostels,
@@ -51,17 +50,11 @@ const models = {
 
 /**
  * Role-based and ownership-based authorization middleware.
- *
- * @param {Object} rules - Defines which roles can access the route.
- * Example:
- *   authorizeRoles({ admin: true, owner: "own", student: false })
- *   authorizeRoles({ admin: true, owner: true, student: "own" })
- * @param {String} [modelName] - Optional model name for ownership check (e.g. "Reviews", "Bookings").
  */
 const authorizeRoles = (rules = {}, modelName = null) => {
   return async (req, res, next) => {
     try {
-      const user = req.user; // from verifyToken middleware
+      const user = req.user;
       if (!user) {
         return res.status(401).json({
           success: false,
@@ -74,11 +67,9 @@ const authorizeRoles = (rules = {}, modelName = null) => {
       const role = user.role;
 
       // 🟢 Admin can do anything
-      if (role === "admin") {
-        return next();
-      }
+      if (role === "admin") return next();
 
-      // 🚫 Role not included in rules
+      // 🚫 Role not configured in rules
       if (!(role in rules)) {
         return res.status(403).json({
           success: false,
@@ -100,13 +91,12 @@ const authorizeRoles = (rules = {}, modelName = null) => {
         });
       }
 
-      // 🟡 Handle "own" access → ownership-based check
+      // 🟡 Ownership-based access ("own")
       if (accessType === "own") {
         if (!modelName) {
           return res.status(500).json({
             success: false,
-            message:
-              "Ownership check failed - model name not specified in authorizeRoles()",
+            message: "Ownership check failed - model name not specified",
             data: null,
             error: ["Internal misconfiguration"],
           });
@@ -122,8 +112,9 @@ const authorizeRoles = (rules = {}, modelName = null) => {
           });
         }
 
-        const resourceId = req.params.id;
-        const resource = await Model.findById(resourceId).select("user");
+        const resource = await Model.findById(req.params.id)
+          .select("user owner")
+          .lean();
 
         if (!resource) {
           return res.status(404).json({
@@ -134,7 +125,20 @@ const authorizeRoles = (rules = {}, modelName = null) => {
           });
         }
 
-        if (resource.user.toString() !== user.id) {
+        // Determine correct owner field dynamically
+        const ownerId =
+          resource.user?.toString() || resource.owner?.toString() || null;
+
+        if (!ownerId) {
+          return res.status(500).json({
+            success: false,
+            message: "Ownership field missing on resource",
+            data: null,
+            error: ["Model missing 'user' or 'owner' field"],
+          });
+        }
+
+        if (ownerId !== user.id) {
           return res.status(403).json({
             success: false,
             message: "Access denied - you can only modify your own data",
@@ -144,7 +148,6 @@ const authorizeRoles = (rules = {}, modelName = null) => {
         }
       }
 
-      // ✅ Passed all checks
       next();
     } catch (error) {
       next(error);
@@ -153,15 +156,3 @@ const authorizeRoles = (rules = {}, modelName = null) => {
 };
 
 export { verifyToken, authorizeRoles };
-
-// const adminOnly = (req, res, next) => {
-//   if (req.user.role !== "admin") {
-//     return res.status(403).json({
-//       success: false,
-//       message: "Access denied: Admins only",
-//       data: null,
-//       error: ["You are not authorized to perform this action"],
-//     });
-//   }
-//   next();
-// };

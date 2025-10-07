@@ -1,5 +1,7 @@
-import Bookings from "../models/bookings.js";
+import { Hostels } from "../models/hostels.js";
 import mongoose from "mongoose";
+import Bookings from "../models/bookings.js";
+
 
 let getBookings = async (req, res, next) => {
   try {
@@ -77,31 +79,21 @@ let getBooking = async (req, res, next) => {
 
 let addBooking = async (req, res, next) => {
   try {
-    let { roomType, hostel, fromDate, toDate, totalAmount } = req.body;
-    let validationErrors = [];
-    if (!roomType) {
-      validationErrors.push("Room type is required");
-    }
-    if (!hostel) {
-      validationErrors.push("Hostel ID is required");
-    }
-    if (!fromDate) {
-      validationErrors.push("From date is required");
-    }
-    if (!toDate) {
-      validationErrors.push("To date is required");
-    }
-    if (!totalAmount) {
-      validationErrors.push("Total amount is required");
-    }
-    // Check if hostel is a valid ObjectId
-    if (hostel && !mongoose.Types.ObjectId.isValid(hostel)) {
+    const { roomType, hostel, fromDate, toDate, totalAmount } = req.body;
+    const validationErrors = [];
+
+    // Validation checks
+    if (!roomType) validationErrors.push("Room type is required");
+    if (!hostel) validationErrors.push("Hostel ID is required");
+    if (!fromDate) validationErrors.push("From date is required");
+    if (!toDate) validationErrors.push("To date is required");
+    if (!totalAmount) validationErrors.push("Total amount is required");
+
+    if (hostel && !mongoose.Types.ObjectId.isValid(hostel))
       validationErrors.push("Hostel ID is not a valid ObjectId");
-    }
-    // Check if roomType is a valid ObjectId
-    if (roomType && !mongoose.Types.ObjectId.isValid(roomType)) {
+    if (roomType && !mongoose.Types.ObjectId.isValid(roomType))
       validationErrors.push("RoomType ID is not a valid ObjectId");
-    }
+
     if (validationErrors.length > 0) {
       return res.status(400).json({
         success: false,
@@ -110,8 +102,46 @@ let addBooking = async (req, res, next) => {
         error: validationErrors,
       });
     }
-    let user = req.user;
-    // Create and save booking first
+
+    // 🟡 Step 1: Check hostel availability
+    const foundHostel = await Hostels.findById(hostel).select(
+      "isAvailable name roomType"
+    );
+
+    if (!foundHostel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hostel not found",
+        data: null,
+        error: ["Invalid hostel ID"],
+      });
+    }
+
+    if (!foundHostel.isAvailable) {
+      return res.status(400).json({
+        success: false,
+        message: `Hostel "${foundHostel.name}" is currently not available for booking`,
+        data: null,
+        error: ["Hostel is unavailable"],
+      });
+    }
+
+    // 🟡 (Optional) Check if selected roomType belongs to this hostel
+    const matchedRoom = foundHostel.roomType?.find(
+      (rt) => rt._id.toString() === roomType.toString()
+    );
+
+    if (!matchedRoom) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid room type for this hostel",
+        data: null,
+        error: ["Room type does not belong to this hostel"],
+      });
+    }
+
+    // 🟢 Step 2: Create booking
+    const user = req.user;
     const newBooking = new Bookings({
       roomType,
       user: user.id,
@@ -120,20 +150,16 @@ let addBooking = async (req, res, next) => {
       toDate,
       totalAmount,
     });
+
     await newBooking.save();
-    // Now fetch it with populate
+
+    // 🟢 Step 3: Populate response
     const booking = await Bookings.findById(newBooking._id)
-      .populate("roomType", ["tyoe", "monthlyRent"])
+      .populate("roomType", ["type", "monthlyRent"])
       .populate("hostel", ["name"])
       .populate("user", ["fullName"])
       .lean();
-    // Replace roomType ObjectId with matching object
-    if (booking.hostel?.roomType) {
-      const match = booking.hostel.roomType.find(
-        (rt) => rt._id.toString() === booking.roomType.toString()
-      );
-      booking.roomType = match || null;
-    }
+
     res.status(201).json({
       success: true,
       message: "Booked hostel successfully",
@@ -141,7 +167,7 @@ let addBooking = async (req, res, next) => {
       error: null,
     });
   } catch (error) {
-    error(next);
+    next(error);
   }
 };
 

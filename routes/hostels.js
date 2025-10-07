@@ -4,6 +4,7 @@ import {
   getHostel,
   addNewHostel,
   updateHostel,
+  toggleHostelAvailability,
   deleteHostel,
 } from "../controllers/hostels.js";
 import validateId from "../middlewares/validateId.js";
@@ -23,6 +24,14 @@ router.put(
   authorizeRoles({ admin: true, owner: "own", student: false }, "Hostels"),
   checkRequestBody,
   updateHostel
+);
+router.patch(
+  "/:id/toggle-availability",
+  verifyToken,
+  authorizeRoles({ admin: true, owner: "own", student: false }, "Hostels"),
+  checkBannedUser,
+  validateId,
+  toggleHostelAvailability
 );
 router.delete(
   "/:id",
