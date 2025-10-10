@@ -29,7 +29,6 @@ const getUsers = async (req, res, next) => {
         .populate("hostelsOwned", ["name"])
         .populate("bookings", ["hostel", "fromDate", "toDate"]),
     ]);
-
     res.status(200).json({
       success: true,
       message: "Data fetched successfully",
@@ -490,7 +489,7 @@ const updateProfile = async (req, res, next) => {
       "favorites",
       "hostelsOwned",
       "bookings",
-      "visistRequests",
+      "visitRequests",
       "reviewsPosted",
     ];
     forbiddenFields.forEach((field) => {
@@ -612,7 +611,7 @@ const deleteProfilePicture = async (req, res, next) => {
       url: "https://res.cloudinary.com/djr88us3q/image/upload/v1759763922/xivirhvfjzx8omplxvbj.webp",
       publicId: "xivirhvfjzx8omplxvbj",
     };
-    // ✅ If already default picture — don’t reset or delete again
+    // If already default picture — don’t reset or delete again
     if (
       user.profilePicture?.publicId === DEFAULT_PIC.publicId ||
       user.profilePicture?.url === DEFAULT_PIC.url
@@ -624,11 +623,11 @@ const deleteProfilePicture = async (req, res, next) => {
         error: ["No custom profile picture to delete"],
       });
     }
-    // ✅ Delete old Cloudinary image (custom one)
+    // Delete old Cloudinary image (custom one)
     if (user.profilePicture?.publicId) {
       await deleteFromCloudinary(user.profilePicture.publicId);
     }
-    // ✅ Set to default
+    // Set to default
     user.profilePicture = DEFAULT_PIC;
     await user.save();
     res.status(200).json({
@@ -682,17 +681,6 @@ const logout = async (req, res, next) => {
 const toggleUserStatus = async (req, res, next) => {
   try {
     const { id } = req.params; // userId to toggle
-    const requester = req.user; // comes from verifyToken middleware
-
-    // Only admin can toggle user status
-    // if (requester.role !== "admin") {
-    //   return res.status(403).json({
-    //     success: false,
-    //     message: "Forbidden: Only admins can change user status",
-    //     data: null,
-    //     error: ["Permission denied"],
-    //   });
-    // }
     const user = await Users.findById(id);
     if (!user) {
       return res.status(404).json({
@@ -730,6 +718,7 @@ const toggleUserStatus = async (req, res, next) => {
       },
       error: null,
     });
+    
   } catch (error) {
     next(error);
   }

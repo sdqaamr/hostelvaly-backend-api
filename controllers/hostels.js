@@ -1,5 +1,4 @@
 import { Hostels } from "../models/hostels.js";
-import Users from "../models/users.js";
 
 const getHostels = async (req, res, next) => {
   try {
@@ -113,10 +112,10 @@ const addNewHostel = async (req, res, next) => {
     await hostel.save();
     await hostel.populate("owner", ["fullName", "role"]);
     // ✅ If the creator is a student, update their role to "owner"
-if (user.role === "student") {
-  const Users = (await import("../models/users.js")).default;
-  await Users.findByIdAndUpdate(user.id, { role: "owner" });
-}
+    if (user.role === "student") {
+      const Users = (await import("../models/users.js")).default;
+      await Users.findByIdAndUpdate(user.id, { role: "owner" });
+    }
     res.status(200).json({
       success: true,
       message: "Hostel added successfully",
@@ -130,9 +129,8 @@ if (user.role === "student") {
 
 const updateHostel = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const hostelId = req.params.id;
     const hostelData = req.body;
-    const userId = req.user.id;
     const forbiddenFields = [
       "isAvailable",
       "reviews",
@@ -149,11 +147,10 @@ const updateHostel = async (req, res, next) => {
         delete req.body[field];
       }
     });
-    const hostel = await Hostels.findOneAndUpdate(
-      { _id: id, owner: userId },
-      hostelData,
-      { new: true }
-    )
+    const hostel = await Hostels.findByIdAndUpdate(hostelId, hostelData, {
+      new: true,
+      runValidators: true,
+    })
       .populate("owner", ["fullName"])
       .populate("bookings", ["roomType", "fromDate", "toDate", "user"])
       .populate("visitRequests", ["visitDate", "user"]);
@@ -213,10 +210,9 @@ const toggleHostelAvailability = async (req, res, next) => {
 
 const deleteHostel = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const userId = req.user.id;
-    const hostel = await Hostels.deleteOne({ _id: id, owner: userId });
-    if (hostel.deletedCount === 0) {
+    let id = req.params.id;
+    const hostel = await Hostels.findByIdAndDelete(id);
+    if (!hostel) {
       return res.status(404).json({
         success: false,
         message: "Hostel not found or not owned by user",
@@ -226,10 +222,11 @@ const deleteHostel = async (req, res, next) => {
     }
     res.status(200).json({
       success: true,
-      message: "Data deleted successfully",
+      message: "Hostel data deleted successfully",
       data: hostel,
       error: null,
     });
+
   } catch (error) {
     next(error);
   }

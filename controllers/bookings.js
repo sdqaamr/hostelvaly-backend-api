@@ -2,8 +2,7 @@ import { Hostels } from "../models/hostels.js";
 import mongoose from "mongoose";
 import Bookings from "../models/bookings.js";
 
-
-let getBookings = async (req, res, next) => {
+const getBookings = async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, parseInt(req.query.limit) || 5);
@@ -43,7 +42,7 @@ let getBookings = async (req, res, next) => {
   }
 };
 
-let getBooking = async (req, res, next) => {
+const getBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
     const booking = await Bookings.findById(id)
@@ -77,7 +76,7 @@ let getBooking = async (req, res, next) => {
   }
 };
 
-let addBooking = async (req, res, next) => {
+const addBooking = async (req, res, next) => {
   try {
     const { roomType, hostel, fromDate, toDate, totalAmount } = req.body;
     const validationErrors = [];
@@ -102,12 +101,10 @@ let addBooking = async (req, res, next) => {
         error: validationErrors,
       });
     }
-
-    // 🟡 Step 1: Check hostel availability
+    // Check hostel availability
     const foundHostel = await Hostels.findById(hostel).select(
       "isAvailable name roomType"
     );
-
     if (!foundHostel) {
       return res.status(404).json({
         success: false,
@@ -116,7 +113,6 @@ let addBooking = async (req, res, next) => {
         error: ["Invalid hostel ID"],
       });
     }
-
     if (!foundHostel.isAvailable) {
       return res.status(400).json({
         success: false,
@@ -125,12 +121,10 @@ let addBooking = async (req, res, next) => {
         error: ["Hostel is unavailable"],
       });
     }
-
-    // 🟡 (Optional) Check if selected roomType belongs to this hostel
+    // Check if selected roomType belongs to this hostel
     const matchedRoom = foundHostel.roomType?.find(
       (rt) => rt._id.toString() === roomType.toString()
     );
-
     if (!matchedRoom) {
       return res.status(400).json({
         success: false,
@@ -139,8 +133,7 @@ let addBooking = async (req, res, next) => {
         error: ["Room type does not belong to this hostel"],
       });
     }
-
-    // 🟢 Step 2: Create booking
+    // Create booking
     const user = req.user;
     const newBooking = new Bookings({
       roomType,
@@ -150,10 +143,8 @@ let addBooking = async (req, res, next) => {
       toDate,
       totalAmount,
     });
-
     await newBooking.save();
-
-    // 🟢 Step 3: Populate response
+    // Populate response
     const booking = await Bookings.findById(newBooking._id)
       .populate("roomType", ["type", "monthlyRent"])
       .populate("hostel", ["name"])
@@ -171,7 +162,78 @@ let addBooking = async (req, res, next) => {
   }
 };
 
-let editBooking = async (req, res, next) => {
+const toggleBookingStatus = async (req, res, next) => {
+  try {
+    const bookingId = req.params.id;
+    const { status } = req.body; // optional, you can pass next state manually
+    const user = req.user;
+    const booking = await Bookings.findById(bookingId)
+      .populate("hostel", "owner name")
+      .populate("user", "fullName role");
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+        data: null,
+        error: ["Invalid booking ID"],
+      });
+    }
+    // 🧩 Authorization logic
+    if (
+      user.role !== "admin" &&
+      booking.user._id.toString() !== user.id &&
+      booking.hostel?.owner?.toString() !== user.id
+    ) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to change this booking status",
+        data: null,
+        error: ["Permission denied"],
+      });
+    }
+    // 🧩 Define allowed transitions
+    const transitions = {
+      pending: ["confirmed", "cancelled"],
+      confirmed: ["pending", "cancelled"],
+      cancelled: ["pending", "confirmed"],
+    };
+    const currentStatus = booking.status;
+    let newStatus = status;
+    if (!newStatus) {
+      // Auto toggle logic (for simple toggles without manual input)
+      if (currentStatus === "pending") newStatus = "confirmed";
+      else if (currentStatus === "confirmed") newStatus = "pending";
+      else newStatus = "pending"; // from cancelled → pending
+    }
+    // 🧩 Validate transition
+    if (!transitions[currentStatus].includes(newStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid status transition from ${currentStatus} to ${newStatus}`,
+        data: null,
+        error: ["Invalid status change"],
+      });
+    }
+    booking.status = newStatus;
+    await booking.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Booking status updated successfully to "${newStatus}"`,
+      data: {
+        id: booking._id,
+        status: booking.status,
+        user: booking.user.fullName,
+        hostel: booking.hostel?.name,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const editBooking = async (req, res, next) => {
   try {
     const bookingId = req.params.id;
     const forbiddenFields = [
@@ -225,14 +287,10 @@ let editBooking = async (req, res, next) => {
   }
 };
 
-let deleteBooking = async (req, res, next) => {
+const deleteBooking = async (req, res, next) => {
   try {
     let id = req.params.id;
-    let user = req.user; // get the authenticated user from request
-    const booking = await Bookings.deleteOne({
-      _id: id,
-      user: user.id,
-    });
+    const booking = await Bookings.findByIdAndDelete(id);
     if (!booking) {
       return res.status(404).json({
         success: false,
@@ -248,23 +306,23 @@ let deleteBooking = async (req, res, next) => {
       );
       booking.roomType = match || null;
     }
-    if (booking.deletedCount === 0) {
-      return res.status(200).json({
-        success: false,
-        message: "Booking can't be deleted or not exists at all",
-        data: null,
-        error: ["Booking not found or you are not authorized to delete it"],
-      });
-    }
     res.status(200).json({
       success: true,
       message: "Booking deleted successfully",
       data: booking,
       error: null,
     });
+    
   } catch (error) {
     next(error);
   }
 };
 
-export { getBookings, getBooking, addBooking, editBooking, deleteBooking };
+export {
+  getBookings,
+  getBooking,
+  addBooking,
+  toggleBookingStatus,
+  editBooking,
+  deleteBooking,
+};

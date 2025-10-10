@@ -47,7 +47,7 @@ The backend uses a MongoDB database with the following collections:
 
 ```
 📦 hostelvaly-backend-api
-├── config/                    # Configuration files
+├── config/                     # Configuration files
 │   └── database.js             # MongoDB connection setup
 ├── controllers/                # Business logic for each entity
 │   ├── bookings.js
@@ -63,8 +63,13 @@ The backend uses a MongoDB database with the following collections:
 │   └── VisitRequest.js
 ├── middlewares/                # Custom middlewares like ID validation
 │   ├── api-limit.js
+│   ├── auth.js
+│   ├── checkBanned.js
+│   ├── cloudinary.js
+│   ├── jsonErrorHandler.js
+│   ├── upload.js
 │   ├── validateId.js
-│   └── auth.js
+│   └── validateRequest.js
 ├── routes/                     # API routes
 │   ├── bookings.js
 │   ├── hostels.js
@@ -77,11 +82,15 @@ The backend uses a MongoDB database with the following collections:
 │   ├── seedReviews.js
 │   ├── seedUsers.js
 │   └── seedVisitRequests.js
-├── .example.env                 # Environment variable example file
-├── index.js                     # Entry point and server setup
-├── run-seeder.js                 # Seeder runner
-├── package.json                  # Project metadata and scripts
-└── README.md                     # Project documentation
+├── utils/                     # In order to send email
+│   └── send-mail.js
+├── views/                     # Containing email handlebars
+│   └── email.handlebars.js
+├── .example.env               # Environment variable example file
+├── index.js                   # Entry point and server setup
+├── run-seeder.js              # Seeder runner
+├── package.json               # Project metadata and scripts
+└── README.md                  # Project documentation
 ```
 
 ---
@@ -114,6 +123,16 @@ JWT_SECRET="my_jwt_secret"
 JWT_EXPIRES_IN="1h"
 JWT_ISSUER="my_jwt_issuer"
 JWT_AUDIENCE="my_jwt_audience"
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+EMAIL_PORT = 587
+EMAIL_USER = my_email_user
+EMAIL_PASSWORD = my_password
+EMAIL_FROM = "noreply@imsdq.dev"
+EMAIL_FROM_NAME = "No Reply"
+OTP_TTL_MINUTES = 10
+CLOUDINARY_CLOUD_NAME = mu_cloud_name
+CLOUDINARY_API_KEY = my_api_key
+CLOUDINARY_API_SECRET = my_api_secret
 ```
 
 ### 4. Run the Development Server
@@ -166,12 +185,12 @@ This Postman collection is named **hostelvaly-backend-api** and contains folders
 
 An environment named **hostelvaly-api-dev** is also included, with a variable:
 
-* `hostelApiUrl` = `http://127.0.0.1:3000/api`
+* `hostelApiUrl` = `http://127.0.0.1:3000/api/`
 
 You can send requests like this:
 
 ```
-{{hostelApiUrl}}/hostels
+{{hostelApiUrl}}hostels
 ```
 
 for fetching all hostels.

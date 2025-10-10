@@ -41,7 +41,7 @@ app.use("/api/auth/", apiRateLimit, userRoutes);
 app.use("/api/bookings/", apiRateLimit, bookingRoutes);
 
 // VisitRequests
-app.use("/api/visitRequests/", apiRateLimit, visitRequestRoutes);
+app.use("/api/visit-requests/", apiRateLimit, visitRequestRoutes);
 
 // Reviews
 app.use("/api/reviews/", reviewRoutes);

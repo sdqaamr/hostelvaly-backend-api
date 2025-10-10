@@ -3,6 +3,7 @@ import {
   getReviews,
   getReview,
   createReview,
+  toggleReviewVerification,
   updateReview,
   deleteReview,
 } from "../controllers/reviews.js";
@@ -15,6 +16,13 @@ const router = express.Router();
 router.get("/", getReviews);
 router.get("/:id", validateId, getReview);
 router.post("/", verifyToken, checkBannedUser, checkRequestBody, createReview);
+router.patch(
+  "/:id/verify",
+  verifyToken,
+  validateId,
+  authorizeRoles({ admin: true, owner: true, student: false }, "Reviews"),
+  toggleReviewVerification
+);
 router.put(
   "/:id",
   validateId,

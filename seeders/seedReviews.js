@@ -126,7 +126,7 @@ const seedReviews = async () => {
         "Nice option for short-term stays in Islamabad. It’s near metro stations and shops. At night, it can get a bit noisy due to nearby cafes, but otherwise a good place.",
       postedAt: "2025-07-14T13:50:00.000Z",
       isVerified: true,
-      hostel: "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel 
+      hostel: "687a8a22cc7148c1e78a99bf", // Iqra Boys Hostel
       user: "687a8d8f69d717b002fa06a0", // Siddiqa Durrani
     },
     {

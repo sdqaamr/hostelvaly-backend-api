@@ -1,7 +1,7 @@
 import Reviews from "../models/reviews.js";
 import mongoose from "mongoose";
 
-let getReviews = async (req, res, next) => {
+const getReviews = async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
     const limit = Math.max(1, parseInt(req.query.limit) || 5);
@@ -31,7 +31,7 @@ let getReviews = async (req, res, next) => {
   }
 };
 
-let getReview = async (req, res, next) => {
+const getReview = async (req, res, next) => {
   try {
     let id = req.params.id;
     const review = await Reviews.findById(id).populate([
@@ -58,7 +58,7 @@ let getReview = async (req, res, next) => {
   }
 };
 
-let createReview = async (req, res, next) => {
+const createReview = async (req, res, next) => {
   try {
     let { rating, comment, hostel } = req.body;
     let validationErrors = [];
@@ -101,7 +101,41 @@ let createReview = async (req, res, next) => {
   }
 };
 
-let updateReview = async (req, res, next) => {
+const toggleReviewVerification = async (req, res, next) => {
+  try {
+    const reviewId = req.params.id;
+    const review = await Reviews.findById(reviewId)
+      .populate("hostel", "name")
+      .populate("user", "fullName");
+
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: "Review not found",
+        data: null,
+        error: ["Invalid review ID"],
+      });
+    }
+    // Toggle true <-> false
+    review.isVerified = !review.isVerified;
+    await review.save();
+    res.status(200).json({
+      success: true,
+      message: `Review verification toggled to ${review.isVerified}`,
+      data: {
+        id: review._id,
+        isVerified: review.isVerified,
+        hostel: review.hostel?.name,
+        user: review.user?.fullName,
+      },
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateReview = async (req, res, next) => {
   try {
     const reviewId = req.params.id;
     let reviewData = req.body;
@@ -137,28 +171,25 @@ let updateReview = async (req, res, next) => {
   }
 };
 
-let deleteReview = async (req, res, next) => {
+const deleteReview = async (req, res, next) => {
   try {
     let id = req.params.id;
-    let user = req.user;
-    const review = await Reviews.deleteOne({
-      _id: id,
-      user: user.id,
-    });
-    if (review.deletedCount === 0) {
+    const review = await Reviews.findByIdAndDelete(id);
+    if (!review) {
       return res.status(200).json({
         success: false,
         message: "Review not found or not belongs to the user",
         data: null,
-        error: ["Review not found or you are not authorized to modify it"],
+        error: ["Review does not exist with the given ID"],
       });
     }
     res.status(200).json({
       success: true,
-      message: "Data deleted successfully",
+      message: "Review deleted successfully",
       data: review,
       error: null,
     });
+
   } catch (error) {
     next(error);
   }
@@ -168,6 +199,7 @@ export {
   getReviews,
   getReview,
   createReview,
+  toggleReviewVerification,
   updateReview,
   deleteReview,
 };

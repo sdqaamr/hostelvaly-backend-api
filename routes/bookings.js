@@ -4,6 +4,7 @@ import {
   getBooking,
   editBooking,
   addBooking,
+  toggleBookingStatus,
   deleteBooking,
 } from "../controllers/bookings.js";
 import validateId from "../middlewares/validateId.js";
@@ -27,12 +28,15 @@ router.get(
   authorizeRoles({ admin: true, owner: true, student: "own" }, "Bookings"),
   getBooking
 );
-router.post(
-  "/",
+router.post("/", verifyToken, checkBannedUser, checkRequestBody, addBooking);
+router.patch(
+  "/:id/status",
   verifyToken,
+  validateId,
   checkBannedUser,
+  authorizeRoles({ admin: true, owner: "own", student: "own" }, "Bookings"),
   checkRequestBody,
-  addBooking
+  toggleBookingStatus
 );
 router.put(
   "/:id",

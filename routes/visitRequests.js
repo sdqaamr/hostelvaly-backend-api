@@ -3,6 +3,8 @@ import {
   getVisitRequests,
   getVisitRequest,
   createVisitRequest,
+  toggleWhatsappUpdates,
+  toggleRequestStatus,
   editVisitRequest,
   deleteVisitRequest,
 } from "../controllers/visitRequests.js";
@@ -17,7 +19,7 @@ router.get(
   verifyToken,
   authorizeRoles(
     { admin: true, owner: false, student: false },
-    "VisistRequests"
+    "VisitRequests"
   ),
   getVisitRequests
 );
@@ -25,10 +27,7 @@ router.get(
   "/:id",
   validateId,
   verifyToken,
-  authorizeRoles(
-    { admin: true, owner: true, student: "own" },
-    "VisistRequests"
-  ),
+  authorizeRoles({ admin: true, owner: true, student: "own" }, "VisitRequests"),
   getVisitRequest
 );
 router.post(
@@ -38,6 +37,28 @@ router.post(
   checkRequestBody,
   createVisitRequest
 );
+router.patch(
+  "/:id/whatsapp",
+  verifyToken,
+  validateId,
+  authorizeRoles(
+    { admin: "own", owner: "own", student: "own" },
+    "VisitRequests"
+  ),
+  toggleWhatsappUpdates
+);
+router.patch(
+  "/:id/status",
+  verifyToken,
+  validateId,
+  checkBannedUser,
+  authorizeRoles(
+    { admin: true, owner: "own", student: "own" },
+    "VisitRequests"
+  ),
+  checkRequestBody,
+  toggleRequestStatus
+);
 router.put(
   "/:id",
   verifyToken,
@@ -45,7 +66,7 @@ router.put(
   checkBannedUser,
   authorizeRoles(
     { admin: true, owner: "own", student: "own" },
-    "VisistRequests"
+    "VisitRequests"
   ),
   checkRequestBody,
   editVisitRequest

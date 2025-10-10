@@ -34,12 +34,7 @@ router.post("/register", checkRequestBody, register);
 router.post("/verify-email", checkRequestBody, verifyEmail);
 router.post("/resend-otp", checkRequestBody, resendOtp);
 router.post("/login", checkRequestBody, loginUser);
-router.patch(
-  "/switch-role",
-  verifyToken,
-  checkBannedUser,
-  switchUserRole
-);
+router.patch("/switch-role", verifyToken, checkBannedUser, switchUserRole);
 router.put("/", verifyToken, checkBannedUser, checkRequestBody, updateProfile);
 router.patch(
   "/profile-picture",
